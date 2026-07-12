@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="README.en.md">📖 English</a>
+  <a href="README.zh-CN.md">📖 中文文档</a>
 </p>
 
 <p align="center">
@@ -8,9 +8,9 @@
 
 <h1 align="center">PhoneMic</h1>
 
-<p align="center"><b>手机当麦克风：说话即转文字，自动输入电脑光标。</b></p>
-<p align="center">手机浏览器录音 → 音频经局域网 HTTPS 上传 → 小米 MiMo-V2.5-ASR 云端识别 → 文字自动粘贴到电脑当前光标。无需装 App、无需数据线，扫码即用。</p>
-<p align="center">把手机变成电脑的「无线麦克风」——写长文、聊微信、写代码注释、做字幕，对着手机说话就能打字。</p>
+<p align="center"><b>Turn your phone into a wireless microphone for your PC.</b></p>
+<p align="center">Record in your phone's browser → audio is sent over LAN HTTPS → transcribed by Xiaomi MiMo-V2.5-ASR → the text is pasted into your PC's cursor. No app install, no USB cable — just scan a QR code.</p>
+<p align="center">Use your phone as a wireless microphone for your PC — draft long texts, chat, write code comments, or caption videos by just speaking.</p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"></a>
@@ -19,132 +19,132 @@
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
 </p>
 
-## 目录
+## Contents
 
-- [功能](#功能)
-- [使用场景](#使用场景)
-- [工作原理](#工作原理)
-- [环境要求](#环境要求)
-- [快速开始](#快速开始)
+- [Features](#features)
+- [Use cases](#use-cases)
+- [How it works](#how-it-works)
+- [Requirements](#requirements)
+- [Quick Start](#quick-start)
   - [Windows](#windows)
   - [macOS / Linux](#macos--linux)
-  - [手机连接](#手机连接)
-  - [重新生成证书](#重新生成证书)
-- [安全说明](#安全说明)
-- [常见问题](#常见问题)
-- [许可证](#许可证)
-- [贡献与支持](#贡献与支持)
+  - [Connect your phone](#connect-your-phone)
+  - [Regenerate the certificate](#regenerate-the-certificate)
+- [Security](#security)
+- [FAQ](#faq)
+- [License](#license)
+- [Contributing & Support](#contributing--support)
 
-## 功能
+## Features
 
-- 🎙️ 手机浏览器录音，扫码即开
-- ☁️ 小米 MiMo 云端识别（中文 / 方言 / 中英混说，自带标点）
-- ⌨️ 识别结果自动粘贴到电脑当前光标
-- 🔌 纯局域网，自签 HTTPS
+- 🎙️ Record from your phone's browser — scan a QR code and go.
+- ☁️ Xiaomi MiMo cloud ASR (Chinese / dialects / Chinese-English mix, with automatic punctuation).
+- ⌨️ Transcription is auto-pasted into the PC's active cursor.
+- 🔌 Pure LAN, self-signed HTTPS.
 
-## 使用场景
+## Use cases
 
-- 📝 **写长文 / 论文 / 博客**：用手机当麦克风，语音输入长文，对着手机说话文字就进文档光标。
-- 💬 **微信 / QQ / 钉钉 聊天**：免安装语音输入，光标放到输入框，说话即发，彻底告别打字。
-- 💻 **写代码注释 / 提交信息**：顺手口述，识别结果自动落到编辑器光标。
-- 🎬 **字幕 / 会议纪要**：基于局域网语音识别，实时把语音转成文字，省去后期整理。
-- 🗣️ **替代语音输入法**：不装第三方输入法，把手机变成电脑的无线麦克风，在任意有光标的地方语音转文字。
+- 📝 **Long-form writing** (articles, essays, blogs) — use your phone as a microphone and voice-input long texts by just speaking.
+- 💬 **Chat in WeChat / Slack / Discord** — a no-install voice input: put the cursor in the box and speak to send.
+- 💻 **Code comments & commit messages** — dictate and the transcript drops into your editor's cursor.
+- 🎬 **Subtitles & meeting notes** — LAN voice recognition turns speech to text in real time.
+- 🗣️ **A voice-input-method replacement** — no third-party IME; your phone becomes a wireless microphone for PC voice input anywhere there's a cursor.
 
-## 工作原理
+## How it works
 
 ```
-手机浏览器                  电脑（运行本服务）
-    |                           |
-    |---- 录音(HTTPS POST) ---->|  /api/transcribe
-    |                           |      ↓ ffmpeg 转 16k 单声道 wav
-    |                           |      ↓ 调用 MiMo-V2.5-ASR 云端 API
-    |<--- 返回识别文本 ---------|      ↓ 复制到剪贴板 + Ctrl+V 粘贴到光标
+Phone browser                PC (runs this service)
+    |                              |
+    |---- record (HTTPS POST) --->|  /api/transcribe
+    |                              |      ↓ ffmpeg → 16 kHz mono wav
+    |                              |      ↓ call MiMo-V2.5-ASR cloud API
+    |<--- return transcript -------|      ↓ copy to clipboard + Ctrl+V into cursor
 ```
 
-文字只会输入到**运行本服务的那台电脑**的光标里；手机（或其他局域网设备）扮演的是「无线麦克风」的角色。
+The text is only ever typed into the cursor of **the PC that runs this service**; the phone (or any other LAN device) acts purely as a "wireless microphone".
 
-## 环境要求
+## Requirements
 
 - Python 3.10+
-- [ffmpeg](https://ffmpeg.org)（需加入系统 PATH）
-- 一台电脑 + 同一 WiFi 下的手机
+- [ffmpeg](https://ffmpeg.org) (must be on your system `PATH`)
+- A PC + a phone on the same Wi-Fi
 
-## 快速开始
+## Quick Start
 
 ### Windows
 
-1. 申请小米 MiMo API key：<https://mimo.mi.com>（注册后创建 API key）
-2. **首次使用先放行防火墙**：右键 `allow_firewall.bat` →「以管理员身份运行」（放行 8443 端口，只需一次）。若之后手机仍提示「已拒绝连接 / ERR_CONNECTION_REFUSED」，多半是这一步没做。
-3. 双击 `start.bat`
-   - 首次会自动创建虚拟环境并安装依赖
-   - 若未检测到 key，会**提示你输入**，输入后自动写入 `.env`
-4. 屏幕会显示「手机访问地址」（如 `https://192.168.x.x:8443`）以及二维码
-5. 按手机系统完成连接（见下方「手机连接」）
-6. 电脑上把光标放到要输入的位置（记事本 / 微信 / 浏览器等），手机说话即可自动输入
+1. Get a Xiaomi MiMo API key at <https://mimo.mi.com> (register, then create an API key).
+2. **Allow the firewall first**: right-click `allow_firewall.bat` → "Run as administrator" (opens port 8443; one time only). If the phone later shows "connection refused / ERR_CONNECTION_REFUSED", this step was likely skipped.
+3. Double-click `start.bat`.
+   - On first run it creates a virtualenv and installs dependencies automatically.
+   - If no key is found, it **prompts you to enter one**, then writes it to `.env` automatically.
+4. The screen shows the "phone URL" (e.g. `https://192.168.x.x:8443`) and a QR code.
+5. Connect your phone (see [Connect your phone](#connect-your-phone) below).
+6. Put the PC cursor wherever you want text (Notepad / WeChat / browser…) and just speak into the phone.
 
 ### macOS / Linux
 
-1. 打开「终端」（Terminal），进入项目目录。
-2. 依次执行：
+1. Open Terminal and `cd` into the project directory.
+2. Run:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-export MIMO_API_KEY=你的key    # 也可直接创建同目录 .env 并写入 MIMO_API_KEY=你的key（服务端会自动读取）
+export MIMO_API_KEY=your_key    # or just create a sibling .env with MIMO_API_KEY=your_key (the server reads it automatically)
 python voice_input_server.py
 ```
 
-3. **放行端口 8443**（手机才能连上）：
-   - **macOS**：需在「系统设置 → 隐私与安全性 → 防火墙」允许 **Python** 接收传入连接；首次运行时弹出的网络访问请求点「允许」。若曾拒绝，需在防火墙选项里把 Python 设为允许。
-   - **Linux（ufw）**：`sudo ufw allow 8443`。
+3. **Open port 8443** (so the phone can connect):
+   - **macOS**: allow **Python** to accept incoming connections in System Settings → Privacy & Security → Firewall. Approve the network prompt on first run. If you once denied it, re-enable Python in the firewall options.
+   - **Linux (ufw)**: `sudo ufw allow 8443`.
 
-启动后屏幕会显示「手机访问地址」和二维码，然后按下方「手机连接」操作。
+After startup the screen shows the "phone URL" and QR code — then follow [Connect your phone](#connect-your-phone).
 
-### 手机连接
+### Connect your phone
 
-**安卓手机**
+**Android**
 
-1. 扫码页面的二维码，或直接输入网址访问。
-2. 浏览器提示「证书风险 / 不安全」时，点「高级 → 继续访问」即可正常使用。
+1. Scan the QR code on the page, or just type the URL.
+2. When the browser warns "certificate risk / not secure", tap "Advanced → Proceed" and it works normally.
 
-**iPhone（以下步骤仅 iPhone 需要，安卓无需）**
+**iPhone** *(these steps are iPhone-only; Android needs none of them)*
 
-自签证书在生成时已把局域网 IP 写进 SAN，且有效期 ≤398 天，符合苹果要求——但 iOS 仍需手动信任。
+The self-signed certificate already includes the LAN IP in its SAN and is valid for ≤398 days, so it complies with Apple's requirements — but iOS still needs manual trust.
 
-#### 第 1 步：把根证书传到 iPhone
+**Step 1 — Send the root cert to the iPhone**
 
-1. 证书文件在服务端的**项目根目录** `rootCA.pem`。
-2. 用 **AirDrop / 邮件 / 微信文件 / 云盘** 等任意方式，把 `rootCA.pem` 传到 iPhone。
-3. 在 iPhone 上打开该文件（或从「文件」App 打开），按提示**安装描述文件**；若未自动跳转，到「**设置 → 通用 → VPN 与设备管理**」（旧版 iOS 叫「描述文件」）中手动点开并安装。
+1. The cert file is `rootCA.pem` in the **project root** on the server.
+2. Send `rootCA.pem` to the iPhone via AirDrop / Mail / WeChat Files / cloud drive — anything works.
+3. Open the file on the iPhone (or from the Files app) and **install the profile** when prompted. If it doesn't auto-jump, go to **Settings → General → VPN & Device Management** (older iOS: "Profiles") and tap to install manually.
 
-#### 第 2 步：激活证书的「完全信任」
+**Step 2 — Enable "full trust" for the cert**
 
-**光安装描述文件不够。** 进入「**设置 → 通用 → 关于本机 → 证书信任设置**」，在下方找到本项目自签证书，**手动打开「完全信任」开关**。不开启这一步，Safari 仍会判定为不安全并拒绝连接。
+Installing the profile alone is **not enough**. Go to **Settings → General → About → Certificate Trust Settings**, find this project's self-signed cert, and manually turn on **Full Trust**. Without this, Safari still treats it as insecure and refuses to connect.
 
-#### 第 3 步：打开页面
+**Step 3 — Open the page**
 
-证书信任后，再在 iPhone 打开 `https://<电脑IP>:8443`（或扫电脑端 `https://<电脑IP>:8443/desktop` 的二维码），地址栏不再有证书警告，即可正常「按住说话」。
+Once trust is enabled, open `https://<PC-IP>:8443` on the iPhone (or scan the QR code at `https://<PC-IP>:8443/desktop`). The address bar no longer warns, and you can "press and hold to talk".
 
-### 需要重新生成证书的情形
+### Regenerate the certificate
 
-证书在生成时只写入当时的局域网 IP；若电脑 IP 变了（DHCP 重新分配），需重新生成：删除**项目根目录**下的 4 个证书文件（`cert.pem`、`key.pem`、`rootCA.pem`、`rootCA-key.pem`）后重启服务即可（新证书会写入当前 IP）。
+The certificate is generated with the LAN IP at that moment baked in. If the PC's IP changes (DHCP reassign), regenerate it: delete the 4 cert files in the **project root** (`cert.pem`, `key.pem`, `rootCA.pem`, `rootCA-key.pem`) and restart the service (a new cert is written with the current IP).
 
-## 安全说明
+## Security
 
-- 监听 `0.0.0.0:8443` 且默认不加鉴权——刻意设计，仅限**可信局域网**使用。
-- API key 只在本地 `.env`（已被 `.gitignore` 屏蔽），证书为本地自签，均不上传仓库。
+- It listens on `0.0.0.0:8443` with **no auth by design** — intended for a **trusted LAN only**.
+- The API key lives only in the local `.env` (blocked by `.gitignore`); the certificate is a local self-sign and is never committed.
 
-## 常见问题
+## FAQ
 
-启动时会打印详细诊断信息（IP / ffmpeg / 证书 / 端口 / key 状态），连接问题看这里即可；电脑端 `https://localhost:8443/desktop` 还有实时连接状态页。
+On startup the server prints detailed diagnostics (IP / ffmpeg / cert / port / key status) — check there for connection issues. The PC page `https://localhost:8443/desktop` also has a live connection-status view.
 
-## 许可证
+## License
 
-[MIT](LICENSE) © PhoneMic 贡献者。
+[MIT](LICENSE) © PhoneMic contributors.
 
-## 贡献与支持
+## Contributing & Support
 
-- 想参与开发？请看 [CONTRIBUTING.md](CONTRIBUTING.md)。
-- 发现安全漏洞？请遵循 [SECURITY.md](SECURITY.md)。
-- 需要帮助？查看 [SUPPORT.md](SUPPORT.md)。
+- Want to help? See [CONTRIBUTING.md](CONTRIBUTING.md).
+- Found a vulnerability? Please follow [SECURITY.md](SECURITY.md).
+- Need help? Check [SUPPORT.md](SUPPORT.md).
