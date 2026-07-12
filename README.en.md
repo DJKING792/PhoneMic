@@ -10,6 +10,7 @@
 
 <p align="center"><b>Turn your phone into a wireless microphone for your PC.</b></p>
 <p align="center">Record in your phone's browser → audio is sent over LAN HTTPS → transcribed by Xiaomi MiMo-V2.5-ASR → the text is pasted into your PC's cursor. No app install, no USB cable — just scan a QR code.</p>
+<p align="center">Use your phone as a wireless microphone for your PC — draft long texts, chat, write code comments, or caption videos by just speaking.</p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"></a>
@@ -21,6 +22,7 @@
 ## Contents
 
 - [Features](#features)
+- [Use cases](#use-cases)
 - [How it works](#how-it-works)
 - [Requirements](#requirements)
 - [Quick Start](#quick-start)
@@ -39,6 +41,16 @@
 - ☁️ Xiaomi MiMo cloud ASR (Chinese / dialects / Chinese-English mix, with automatic punctuation).
 - ⌨️ Transcription is auto-pasted into the PC's active cursor.
 - 🔌 Pure LAN, self-signed HTTPS.
+
+## Use cases
+
+- 📝 **Long-form writing** (articles, essays, blogs) — speak instead of typing.
+- 💬 **Chat in WeChat / Slack / Discord** — text lands straight in the input box.
+- 💻 **Code comments & commit messages** — dictate into your editor's cursor.
+- 🎬 **Subtitles & meeting notes** — real-time speech-to-text.
+- 🗣️ **A keyboard-free voice input** anywhere there's a cursor.
+
+> Keywords: phone as microphone, wireless microphone, voice input, speech to text, LAN voice recognition, dictation, MiMo ASR, hands-free typing, PC voice input.
 
 ## How it works
 
