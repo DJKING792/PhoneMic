@@ -1,0 +1,26 @@
+# ---- 密钥（绝不入库）----
+.env
+
+# ---- 自签证书（首次运行自动生成，含 CA 私钥，禁止外泄）----
+cert.pem
+key.pem
+rootCA.pem
+rootCA-key.pem
+
+# ---- Python ----
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# ---- 运行时临时文件 ----
+audio_temp/
+*.log
+server_stdout.log
+
+# ---- 编辑器 / 系统 ----
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

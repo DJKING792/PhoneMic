@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PhoneMic · 扫码打开</title>
+<style>
+  :root { --bg:#0f1220; --card:#1a1f33; --acc:#4f8cff; --ok:#37d39b; --warn:#ffb84d; --err:#ff6b6b; --txt:#e8ecf5; --sub:#8b93a7; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; background:var(--bg); color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px; gap:16px; }
+  .card { background:var(--card); border-radius:16px; padding:24px; max-width:520px; width:100%; }
+  .center { text-align:center; }
+  h1 { font-size:19px; margin:0 0 6px; }
+  .sub { color:var(--sub); font-size:13px; margin-bottom:18px; }
+  .qr { background:#fff; border-radius:12px; padding:14px; display:inline-block; }
+  .qr img { display:block; width:220px; height:220px; }
+  .url { margin-top:14px; font-size:14px; word-break:break-all; color:var(--acc); }
+  .steps { text-align:left; font-size:13px; line-height:1.8; color:var(--sub); margin-top:18px;
+    background:rgba(255,255,255,.04); border-radius:10px; padding:12px 14px; }
+  .steps b { color:var(--txt); }
+  a { color:var(--acc); }
+
+  .status-title { font-size:15px; margin:0 0 12px; display:flex; align-items:center; gap:8px; }
+  .dot { width:10px; height:10px; border-radius:50%; background:var(--sub); display:inline-block; }
+  .dot.ok { background:var(--ok); }
+  .dot.err { background:var(--err); }
+  .dot.warn { background:var(--warn); }
+  .grid { display:grid; grid-template-columns:auto 1fr; gap:8px 14px; font-size:13px; }
+  .grid .k { color:var(--sub); }
+  .grid .v { word-break:break-all; }
+  .tag { padding:2px 8px; border-radius:6px; font-size:12px; font-weight:600; }
+  .tag.ok { background:rgba(55,211,155,.15); color:var(--ok); }
+  .tag.err { background:rgba(255,107,107,.15); color:var(--err); }
+  .tag.warn { background:rgba(255,184,77,.15); color:var(--warn); }
+  .conn-h { font-size:13px; color:var(--sub); margin:18px 0 8px; display:flex; justify-content:space-between; align-items:center; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th,td { text-align:left; padding:6px 8px; border-bottom:1px solid rgba(255,255,255,.06); }
+  th { color:var(--sub); font-weight:500; }
+  td.ip { color:var(--acc); }
+  .empty { color:var(--sub); font-size:13px; padding:10px 0; }
+  .tip { font-size:12px; color:var(--sub); margin-top:12px; line-height:1.7; }
+  .banner { border-radius:10px; padding:11px 14px; font-size:13px; line-height:1.65; margin-bottom:14px; }
+  .banner.err { background:rgba(255,107,107,.12); border:1px solid var(--err); color:var(--err); }
+  .banner.err b { color:var(--err); }
+  .banner code { background:rgba(255,255,255,.08); padding:1px 6px; border-radius:5px; color:var(--txt);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+  .banner a { color:var(--err); }
+  button.copy { margin-top:10px; padding:7px 14px; border-radius:9px; border:1px solid var(--acc);
+    background:transparent; color:var(--acc); font-size:13px; cursor:pointer; }
+</style>
+</head>
+<body>
+<div class="card center">
+  <h1>🎤 PhoneMic · 扫码打开</h1>
+  <div class="sub">用手机相机/微信扫下面的二维码，直接打开录音页</div>
+  <div class="qr"><img src="/desktop/qr.png" alt="QR"></div>
+  <div class="url" id="url">https://…</div>
+  <button class="copy" id="copy">复制手机访问地址</button>
+
+  <div class="steps">
+    <b>使用步骤：</b><br>
+    1. 安卓：扫码后在浏览器打开页面，提示「证书风险」时点「高级 → 继续访问」。<br>
+    2. <b>iPhone 用户</b>：iOS 无「继续访问」，须先把电脑项目根目录下的 `rootCA.pem` 用 AirDrop / 邮件 / 微信文件传到 iPhone 安装并开启完全信任（设置 › 通用 › 关于本机 › 证书信任设置），再扫码打开页面。<br>
+    3. 按住页面上的「按住说话」按钮说话，松手即识别并粘贴到电脑光标处。
+  </div>
+</div>
+
+<div class="card">
+  <div class="status-title"><span class="dot" id="dot"></span><span>实时连接状态</span>
+    <span id="refresh" style="margin-left:auto;color:var(--sub);font-size:12px;"></span></div>
+  <div class="banner err" id="key-banner" style="display:none;">
+    ⚠ <b>MIMO_API_KEY 未配置</b>，语音识别将无法工作。<br>
+    请设置环境变量 <code>MIMO_API_KEY</code>，或在项目根目录 <code>.env</code> 写入一行
+    <code>MIMO_API_KEY=你的key</code>，然后重启服务。<br>
+    申请地址：<a href="https://mimo.mi.com" target="_blank">https://mimo.mi.com</a>
+  </div>
+  <div class="grid">
+    <div class="k">服务状态</div><div class="v" id="s-running">…</div>
+    <div class="k">局域网 IP</div><div class="v" id="s-ip">…</div>
+    <div class="k">ffmpeg</div><div class="v" id="s-ffmpeg">…</div>
+    <div class="k">证书</div><div class="v" id="s-cert">…</div>
+    <div class="k">识别模式</div><div class="v" id="s-model">…</div>
+    <div class="k">运行时长</div><div class="v" id="s-uptime">…</div>
+  </div>
+
+  <div class="conn-h"><span>最近连接（手机连上会显示在这里）</span></div>
+  <div id="conn-wrap"><div class="empty">暂无连接记录。手机打开页面后会出现在这里。</div></div>
+
+  <div class="tip">
+    想确认手机到底有没有连到电脑？看“最近连接”：出现手机 WiFi 的 IP + 访问了 <b>/</b> 或 <b>/api/ping</b>，
+    说明手机已到达服务端；若一直空白，多半是<b>不在同一 WiFi</b> 或 <b>防火墙拦截</b>。
+  </div>
+</div>
+
+<script>
+  function fmtUptime(s) {
+    s = Math.max(0, s | 0);
+    var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), ss = s % 60;
+    return (h ? h + "小时" : "") + (m ? m + "分" : "") + ss + "秒";
+  }
+  function tag(text, cls) { return '<span class="tag ' + cls + '">' + text + '</span>'; }
+
+  function renderStatus(d) {
+    var dot = document.getElementById("dot");
+    dot.className = "dot ok";
+    document.getElementById("s-running").innerHTML = tag("运行中 ✔", "ok");
+    document.getElementById("s-ip").textContent = d.lan_ip + " : " + d.port;
+    document.getElementById("s-ffmpeg").innerHTML = d.ffmpeg_ok ? tag("可用", "ok") : tag("缺失 ⚠", "warn");
+    document.getElementById("s-cert").innerHTML = d.cert_ok ? tag("已生成", "ok") : tag("缺失", "err");
+    document.getElementById("s-model").innerHTML = d.mimo_api_key_set
+      ? tag("云端 MiMo ASR ✔", "ok")
+      : tag("未配置 MIMO_API_KEY ✗", "err");
+    document.getElementById("key-banner").style.display = d.mimo_api_key_set ? "none" : "block";
+    document.getElementById("s-uptime").textContent = fmtUptime(d.uptime_sec);
+
+    var wrap = document.getElementById("conn-wrap");
+    var list = d.connections || [];
+    if (!list.length) {
+      wrap.innerHTML = '<div class="empty">暂无连接记录。手机打开页面后会出现在这里。</div>';
+      return;
+    }
+    var rows = list.slice().reverse().map(function (c) {
+      var st = c.status;
+      var stCls = st >= 200 && st < 400 ? "ok" : (st >= 400 ? "err" : "warn");
+      var stTag = tag(st, stCls);
+      return "<tr><td>" + c.time + "</td><td class='ip'>" + c.ip + "</td><td>" +
+             c.method + " " + c.path + "</td><td>" + stTag + "</td></tr>";
+    }).join("");
+    wrap.innerHTML = "<table><thead><tr><th>时间</th><th>客户端IP</th><th>请求</th><th>状态</th></tr></thead><tbody>" +
+                     rows + "</tbody></table>";
+  }
+
+  function renderError() {
+    var dot = document.getElementById("dot");
+    dot.className = "dot err";
+    document.getElementById("s-running").innerHTML = tag("无法连接服务端", "err");
+    document.getElementById("s-ip").textContent = "—";
+    document.getElementById("s-ffmpeg").textContent = "—";
+    document.getElementById("s-cert").textContent = "—";
+    document.getElementById("s-model").textContent = "—";
+    document.getElementById("s-uptime").textContent = "—";
+    document.getElementById("key-banner").style.display = "none";
+    document.getElementById("conn-wrap").innerHTML =
+      '<div class="empty">获取状态失败。请确认服务正在运行（双击 start.bat，窗口里有“服务已启动”）。</div>';
+  }
+
+  var tick = 0;
+  async function poll() {
+    tick++;
+    try {
+      var r = await fetch("/api/status");
+      if (!r.ok) throw new Error("bad status");
+      var d = await r.json();
+      renderStatus(d);
+      document.getElementById("refresh").textContent = "已更新 " + tick + " 次";
+    } catch (e) {
+      renderError();
+      document.getElementById("refresh").textContent = "连接失败";
+    }
+  }
+
+  // 地址填充
+  fetch("/api/info").then(function (r) { return r.json(); }).then(function (d) {
+    document.getElementById("url").textContent = d.url;
+  }).catch(function () {});
+
+  document.getElementById("copy").addEventListener("click", function () {
+    var url = document.getElementById("url").textContent;
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(function () {
+      var b = document.getElementById("copy"); var t = b.textContent;
+      b.textContent = "已复制 ✔"; setTimeout(function () { b.textContent = t; }, 1500);
+    });
+  });
+
+  poll();
+  setInterval(poll, 3000);
+</script>
+</body>
+</html>

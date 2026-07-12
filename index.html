@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>PhoneMic</title>
+<style>
+  :root {
+    --bg: #030712;
+    --acc: #3b82f6;
+    --acc-glow: rgba(59, 130, 246, 0.4);
+    --rec: #ef4444;
+    --rec-glow: rgba(239, 68, 68, 0.5);
+    --ok: #10b981;
+    --err: #f43f5e;
+    --txt-main: #f8fafc;
+    --txt-mute: #475569;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  
+  html, body { 
+    margin: 0; padding: 0; height: 100%; 
+    background-color: var(--bg);
+    color: var(--txt-main);
+    font-family: system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* 动态环境光晕背景 - 极其高级的氛围感来源 */
+  .ambient-glow {
+    position: absolute;
+    top: -10%; left: 50%; transform: translateX(-50%);
+    width: 80vw; height: 50vh;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(0,0,0,0) 70%);
+    filter: blur(60px);
+    z-index: 0;
+    pointer-events: none;
+    transition: background 0.8s ease, width 0.8s ease;
+  }
+  body.is-recording .ambient-glow {
+    background: radial-gradient(circle, rgba(239, 68, 68, 0.2) 0%, rgba(0,0,0,0) 70%);
+    width: 100vw;
+  }
+
+  /* 核心骨架：去卡片化，全面屏剧场布局 */
+  .wrap { 
+    position: relative; z-index: 1;
+    max-width: 600px; margin: 0 auto; 
+    padding: 40px 24px calc(30px + env(safe-area-inset-bottom)); 
+    display: flex; flex-direction: column; height: 100%; 
+  }
+
+  /* 极简流体诊断栏 */
+  .system-meta {
+    display: flex; gap: 16px; justify-content: center;
+    font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .diag { color: var(--txt-mute); transition: color 0.3s; }
+  .diag b { color: var(--txt-main); font-weight: 500; }
+  .diag .good { color: var(--ok); }
+  .diag .bad { color: var(--err); }
+
+  /* 电影字幕式的文本展示区 */
+  .result { 
+    flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    overflow-y: auto; margin: 40px 0; padding-right: 4px;
+    text-align: center; scroll-behavior: smooth;
+  }
+  /* 隐藏滚动条但保留滚动功能 */
+  .result::-webkit-scrollbar { width: 0; background: transparent; }
+
+  .result div {
+    font-size: 26px; font-weight: 600; line-height: 1.5;
+    background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+    animation: textAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .result .ph { 
+    font-size: 18px; font-weight: 400; line-height: 1.8;
+    color: var(--txt-mute); background: none; -webkit-text-fill-color: initial;
+    animation: pulseMute 2s infinite ease-in-out;
+  }
+
+  /* 底部状态通知 */
+  .status { 
+    text-align: center; font-size: 13px; font-weight: 500;
+    color: var(--txt-mute); min-height: 20px; margin-bottom: 24px;
+    transition: all 0.3s; letter-spacing: 0.3px;
+  }
+  .status.err { color: var(--err); animation: shake 0.4s ease; }
+  .status.ok { color: var(--ok); text-shadow: 0 0 12px rgba(16,185,129,0.3); }
+
+  /* 绝对C位：巨幕触控交互区 */
+  .control-panel {
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+
+  /* 赛博朋克极简圆钮 */
+  .mic-wrapper { position: relative; }
+  .mic-btn { 
+    width: 96px; height: 96px; border-radius: 50%; 
+    background: #ffffff; border: none;
+    color: #000000; font-size: 14px; font-weight: 700; 
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 0 rgba(255,255,255, 0.15), 0 8px 32px rgba(0,0,0,0.5); 
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+    user-select: none; touch-action: none; cursor: pointer;
+  }
+  
+  /* 录音激活：纯白纽变深邃黑红，释放巨大的霓虹光晕 */
+  body.is-recording .mic-btn { 
+    background: var(--rec); color: #ffffff;
+    box-shadow: 0 0 0 20px rgba(239, 68, 68, 0), 0 0 40px var(--rec-glow); 
+    animation: micPulse 1.5s infinite cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scale(1.05);
+  }
+  .mic-btn:active { transform: scale(0.92); transition: transform 0.1s; }
+
+  /* 提示语与附属动作 */
+  .hint { font-size: 11px; color: var(--txt-mute); letter-spacing: 0.5px; text-align: center; }
+  .hint a { color: var(--acc); text-decoration: none; font-weight: 500; margin-top: 4px; display: inline-block; }
+  
+  .retry { 
+    display: none; position: absolute; top: -45px; left: 50%; transform: translateX(-50%);
+    padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(244,63,94,0.4);
+    background: rgba(244,63,94,0.1); color: var(--err); font-size: 11px; font-weight: 600;
+    cursor: pointer; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .retry.show { display: block; animation: textAppear 0.3s ease; }
+
+  /* 精巧的现代动画 */
+  @keyframes micPulse {
+    0% { box-shadow: 0 0 0 0 rgba(239,68,68, 0.4), 0 0 40px var(--rec-glow); }
+    100% { box-shadow: 0 0 0 24px rgba(239,68,68, 0), 0 0 40px var(--rec-glow); }
+  }
+  @keyframes pulseMute {
+    0%, 100% { opacity: 0.5; transform: scale(0.99); }
+    50% { opacity: 0.9; transform: scale(1); }
+  }
+  @keyframes textAppear {
+    from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient-glow"></div>
+
+<div class="wrap">
+  <!-- 顶部精细诊断，作为点缀而非主体 -->
+  <header class="system-meta">
+    <span class="diag" id="diag">ENV..</span>
+    <span class="diag" id="srv">SRV..</span>
+  </header>
+  
+  <!-- 巨幕文本区 -->
+  <div class="result" id="result">
+    <div class="ph">HOLD TO SPEAK<br><span style="font-size:13px; opacity: 0.7;">松手即刻识别并注入电脑光标</span></div>
+  </div>
+
+  <!-- 动态反馈与控制 -->
+  <div class="status" id="status"></div>
+  
+  <div class="control-panel">
+    <div class="mic-wrapper">
+      <button class="retry" id="retry">RESET MIC</button>
+      <button class="mic-btn" id="btn">TALK</button>
+    </div>
+    <span class="hint">安卓用户点「高级 → 继续访问」即可使用；iPhone 因 iOS 无「继续访问」，须先把电脑项目根目录下的 <code>rootCA.pem</code> 用 AirDrop / 邮件 / 微信文件传到手机，安装描述文件并在「设置 › 通用 › 关于本机 › 证书信任设置」开启完全信任后，再打开本页。</span>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var btn = document.getElementById("btn");
+  var statusEl = document.getElementById("status");
+  var resultEl = document.getElementById("result");
+  var diagEl = document.getElementById("diag");
+  var retryBtn = document.getElementById("retry");
+
+  var stream = null;       
+  var recorder = null;
+  var chunks = [];
+  var recording = false;
+  var wakeLock = null;      
+
+  async function requestWakeLock() {
+    try { if ("wakeLock" in navigator) wakeLock = await navigator.wakeLock.request("screen"); }
+    catch (e) {}
+  }
+  function releaseWakeLock() {
+    if (wakeLock) { wakeLock.release().catch(function () {}); wakeLock = null; }
+  }
+
+  function setStatus(msg, cls) {
+    statusEl.textContent = msg || "";
+    statusEl.className = "status" + (cls ? " " + cls : "");
+  }
+  function showText(t) {
+    var ph = resultEl.querySelector(".ph");
+    if (ph) ph.remove();
+    
+    var span = document.createElement("div");
+    span.textContent = t;
+    resultEl.appendChild(span);
+    resultEl.scrollTop = resultEl.scrollHeight;
+  }
+
+  // ---- 环境诊断 ----
+  async function diagnose() {
+    var lines = [];
+    var isSecure = location.protocol === "https:" || location.hostname === "localhost";
+    lines.push("环境: " + (isSecure ? '<span class="good">SECURE</span>' : '<span class="bad">INSECURE</span>'));
+    
+    if (navigator.permissions && navigator.permissions.query) {
+      try {
+        var p = await navigator.permissions.query({ name: "microphone" });
+        var label = { granted: '<span class="good">MIC_OK</span>', denied: '<span class="bad">MIC_DENIED</span>', prompt: "MIC_REQ" };
+        lines.push("权限: " + (label[p.state] || p.state));
+      } catch (e) {}
+    }
+    diagEl.innerHTML = lines.join(" ｜ ");
+  }
+
+  function stopStream() {
+    if (stream) {
+      stream.getTracks().forEach(function (t) { t.stop(); });
+      stream = null;
+    }
+  }
+
+  async function ensureMic() {
+    if (stream) return stream;
+    stopStream(); 
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 }
+    });
+    return stream;
+  }
+
+  function pickMime() {
+    var cands = ["audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus"];
+    for (var i = 0; i < cands.length; i++) {
+      if (window.MediaRecorder && MediaRecorder.isTypeSupported(cands[i])) return cands[i];
+    }
+    return "";
+  }
+
+  // ---- 录音控制 ----
+  async function startRecording() {
+    if (recording) return;
+    setStatus("唤醒硬件中...");
+    try {
+      var s = await ensureMic();
+      chunks = [];
+      var mime = pickMime();
+      recorder = mime ? new MediaRecorder(s, { mimeType: mime }) : new MediaRecorder(s);
+      recorder.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+      recorder.onstop = onStop;
+      recorder.start();
+      requestWakeLock();   
+      recording = true;
+      document.body.classList.add("is-recording");
+      btn.textContent = "REC";
+      setStatus("LISTENING");
+      retryBtn.classList.remove("show");
+    } catch (err) {
+      handleMicError(err);
+    }
+  }
+
+  function stopRecording() {
+    if (!recording) return;
+    recording = false;
+    releaseWakeLock();     
+    document.body.classList.remove("is-recording");
+    btn.textContent = "TALK";
+    try { recorder.stop(); } catch (e) {}
+  }
+
+  async function onStop() {
+    var blob = new Blob(chunks, { type: (recorder && recorder.mimeType) || "audio/webm" });
+    stopStream(); 
+    setStatus("AI 正在深度识别...");
+    var fd = new FormData();
+    fd.append("audio", blob, "rec.webm");
+    try {
+      var res = await fetch("/api/transcribe", { method: "POST", body: fd });
+      var data = await res.json();
+      if (data.ok) {
+        showText(data.text);
+        setStatus("已注入电脑光标 ✔", "ok");
+      } else {
+        setStatus("识别失败: " + data.error, "err");
+      }
+    } catch (e) {
+      setStatus("网络断开: " + e.message, "err");
+    }
+  }
+
+  function handleMicError(err) {
+    console.error(err);
+    stopStream();
+    var name = err && err.name ? err.name : "";
+    if (name === "NotReadableError" || name === "AbortError") {
+      setStatus("硬件冲突：麦克风被其他应用占用", "err");
+      retryBtn.classList.add("show");
+    } else if (name === "NotAllowedError") {
+      setStatus("权限遭拒：请在浏览器设置中允许麦克风", "err");
+    } else {
+      setStatus("错误: " + name, "err");
+      retryBtn.classList.add("show");
+    }
+  }
+
+  // ---- 事件绑定 ----
+  btn.addEventListener("pointerdown", function (e) { e.preventDefault(); startRecording(); });
+  btn.addEventListener("pointerup", stopRecording);
+  btn.addEventListener("pointerleave", stopRecording);
+  btn.addEventListener("pointercancel", stopRecording);
+
+  document.addEventListener("keydown", function (e) {
+    if (e.code === "Space" && !e.repeat) { e.preventDefault(); startRecording(); }
+  });
+  document.addEventListener("keyup", function (e) {
+    if (e.code === "Space") { e.preventDefault(); stopRecording(); }
+  });
+
+  retryBtn.addEventListener("click", function () { stopStream(); startRecording(); });
+
+  window.addEventListener("pagehide", stopStream);
+  window.addEventListener("beforeunload", stopStream);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") { stopRecording(); stopStream(); }
+  });
+
+  diagnose();
+
+  // ---- 服务器自检 ----
+  async function checkServer() {
+    var el = document.getElementById("srv");
+    try {
+      var r = await fetch("/api/ping");
+      var d = await r.json();
+      if (d.ok) {
+        el.innerHTML = "连接: <span class='good'>CONNECTED</span>";
+      } else {
+        el.innerHTML = "连接: <span class='bad'>SERVER_ERR</span>";
+      }
+    } catch (e) {
+      el.innerHTML = "连接: <span class='bad'>DISCONNECTED</span>";
+    }
+  }
+  checkServer();
+
+  if (navigator.permissions && navigator.permissions.addEventListener) {
+    try {
+      navigator.permissions.addEventListener("change", function (e) {
+        if (e.target && e.target.name === "microphone") diagnose();
+      });
+    } catch (e) {}
+  }
+})();
+</script>
+</body>
+</html>

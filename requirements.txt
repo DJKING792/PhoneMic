@@ -1,0 +1,5 @@
+aiohttp>=3.9
+cryptography>=42.0
+pyperclip>=1.8
+pyautogui>=0.9.54
+qrcode[pil]>=7.4
