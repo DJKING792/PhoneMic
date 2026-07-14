@@ -1,0 +1,5 @@
+# 离线模式（本地 faster-whisper 识别）可选依赖。
+# 默认不安装，仅当你要启用 PHONEMIC_ASR=local 时才需要：
+#     pip install -r requirements-offline.txt
+# 首次运行会自动下载 Whisper 模型权重（约几百 MB，仅一次）。
+faster-whisper>=1.0
