@@ -73,24 +73,9 @@ The text is only ever typed into the cursor of **the PC that runs this service**
 
 ## Pro / Offline Mode (local ASR)
 
-By default PhoneMic uses Xiaomi's MiMo cloud ASR. If you want **everything to stay on your PC** — no API key, no internet, fully private — enable **Offline Mode** with a local [faster-whisper](https://github.com/SYSTRAN/faster-whisper) model:
+By default PhoneMic uses Xiaomi's MiMo cloud ASR. If you want everything to stay on your PC — no API key, no internet, fully private — enable **Offline Mode** with a local faster-whisper model. See [requirements-offline.txt](requirements-offline.txt) for details.
 
-```bash
-pip install faster-whisper        # one-time; downloads the model weights on first run (~hundreds of MB)
-export PHONEMIC_ASR=local          # switch the engine to local faster-whisper
-# optional tuning:
-export WHISPER_MODEL=small         # tiny | base | small | medium | large-v3  (default: small)
-export WHISPER_DEVICE=cpu          # cpu | cuda
-export WHISPER_COMPUTE=int8        # int8 | float16 ...
-python voice_input_server.py
-```
-
-- The Whisper weights are downloaded **once** on first use and cached afterwards.
-- On Windows you can put these in the same `.env` file (see [`.env.example`](.env.example)) instead of using `export`.
-- Offline Mode runs Whisper fully on your PC. It works best for English / general content and is the right choice when you want on-device, private, offline transcription. For Chinese, dialects, or Chinese-English mix, the cloud MiMo engine (Cloud Mode) gives better accuracy.
-- Because audio never leaves the PC, Offline Mode also makes PhoneMic a great fit for **self-hosted / offline** setups.
-
-Pinned optional dependency: [`requirements-offline.txt`](requirements-offline.txt).
+⚠️ Offline Mode's Chinese recognition is limited. Whisper is trained mainly on English and is noticeably weaker than MiMo cloud for Chinese (especially dialects, jargon, homophones, and Chinese-English mixing). If your main language is Chinese, Cloud Mode (MiMo) is strongly recommended. Offline Mode fits best when English / general content is the priority and "fully private / offline" comes first — and because audio never leaves the PC, it is also ideal for self-hosted / offline setups.
 
 ## Requirements
 
@@ -103,15 +88,17 @@ Pinned optional dependency: [`requirements-offline.txt`](requirements-offline.tx
 
 ### Windows
 
-1. Get a Xiaomi MiMo API key at <https://platform.xiaomimimo.com> (register, then create an API key). *Only needed for Cloud Mode; skip it if you use [Offline Mode](#pro--offline-mode-local-asr).*
+1. **Download the project**: Create a folder anywhere and open it. Click the File Explorer address bar, type `cmd`, and press Enter to open a command prompt in that folder. Run:
+
+   ```
+   git clone https://github.com/DJKING792/PhoneMic.git
+   ```
+
+   Then enter the created `PhoneMic` subfolder.
 2. **Allow the firewall first**: right-click `allow_firewall.bat` → "Run as administrator" (opens port 8443; one time only). If the phone later shows "connection refused / ERR_CONNECTION_REFUSED", this step was likely skipped.
-3. Double-click `start.bat`.
-   - On first run it creates a virtualenv and installs dependencies automatically.
-   - It then **asks you to choose the recognition mode**: `1) Cloud (MiMo)` or `2) Offline (local faster-whisper)`. Offline mode skips the API-key prompt and installs the local ASR dependency automatically; your choice is remembered in `.env` for next time.
-   - If you pick Cloud Mode and no key is found, it **prompts you to enter one**, then writes it to `.env` automatically.
+3. **Double-click `start.bat` to launch**: On first run it creates a virtualenv and installs dependencies automatically, then asks you to choose the mode — `1` Cloud (MiMo, prompts for a free API key; get one at <https://platform.xiaomimimo.com>) or `2` Offline (local faster-whisper, no key needed). Your choice is saved to `.env` and reused next time.
 4. The screen shows the "phone URL" (e.g. `https://192.168.x.x:8443`) and a QR code.
-5. Connect your phone (see [Connect your phone](#connect-your-phone) below).
-6. Put the PC cursor wherever you want text (Notepad / WeChat / browser…) and just speak into the phone.
+5. Connect your phone (see [Connect your phone](#connect-your-phone) below), put the PC cursor wherever you want text (Notepad / WeChat / browser…), and just speak into the phone.
 
 ### macOS / Linux
 
@@ -149,7 +136,7 @@ After startup the screen shows the "phone URL" and QR code — then follow [Conn
 
 **iPhone** *(these steps are iPhone-only; Android needs none of them)*
 
-The self-signed certificate already includes the LAN IP in its SAN and is valid for ≤398 days, so it complies with Apple's requirements — but iOS still needs manual trust.
+iOS is strict about self-signed certificates and requires manual trust. The steps:
 
 **Step 1 — Send the root cert to the iPhone**
 
