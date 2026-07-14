@@ -73,24 +73,9 @@
 
 ## Pro / 离线模式（本地识别）
 
-默认情况下 PhoneMic 使用小米 MiMo 云端识别。如果你想**让一切都在本机完成**——不要 API Key、不联网、完全隐私——可以开启 **离线模式**，改用本地的 [faster-whisper](https://github.com/SYSTRAN/faster-whisper) 模型：
+默认情况下 PhoneMic 使用小米 MiMo 云端识别。如果你想让一切都在本机完成——不要 API Key、不联网、完全隐私——可以开启 离线模式，更多详情见 [requirements-offline.txt](requirements-offline.txt)。
 
-```bash
-pip install faster-whisper        # 一次性安装；首次运行会下载模型权重（约几百 MB）
-export PHONEMIC_ASR=local          # 把识别引擎切换为本地 faster-whisper
-# 可选调优：
-export WHISPER_MODEL=small         # tiny | base | small | medium | large-v3（默认 small）
-export WHISPER_DEVICE=cpu          # cpu | cuda
-export WHISPER_COMPUTE=int8        # int8 | float16 ...
-python voice_input_server.py
-```
-
-- Whisper 权重在**首次使用**时下载一次，之后会被缓存。
-- Windows 上可把这些变量直接写进同目录的 `.env` 文件（见 [`.env.example`](.env.example)），不必用 `export`。
-- ⚠️ **离线模式的中文识别效果有限。** Whisper 主要以英文训练，对中文（尤其方言、专业术语、同音词、中英混说）明显弱于 MiMo 云端。**如果你的主要语言是中文，强烈建议用云端模式（MiMo）。** 离线模式更适合以英文 / 通用内容为主、且把「完全隐私 / 离线」放在第一位的场景。
-- 因为音频全程不出本机，离线模式也让 PhoneMic 非常适合**自托管 / 离线**场景。
-
-可选依赖清单见 [`requirements-offline.txt`](requirements-offline.txt)。
+⚠️ 离线模式的中文识别效果有限。 Whisper 主要以英文训练，对中文（尤其方言、专业术语、同音词、中英混说）明显弱于 MiMo 云端。如果你的主要语言是中文，强烈建议用云端模式（MiMo）。 离线模式更适合以英文 / 通用内容为主、且把「完全隐私 / 离线」放在第一位的场景；也因其音频全程不出本机，特别适合自托管 / 离线部署。
 
 ## 环境要求
 
@@ -103,15 +88,17 @@ python voice_input_server.py
 
 ### Windows
 
-1. 申请小米 MiMo API key：<https://platform.xiaomimimo.com>（注册后创建 API key）。*仅云端模式需要；使用[离线模式](#pro--离线模式本地识别)可跳过本步。*
-2. **首次使用先放行防火墙**：右键 `allow_firewall.bat` →「以管理员身份运行」（放行 8443 端口，只需一次）。若之后手机仍提示「已拒绝连接 / ERR_CONNECTION_REFUSED」，多半是这一步没做。
-3. 双击 `start.bat`
-   - 首次会自动创建虚拟环境并安装依赖
-   - 随后会**让你选择识别模式**：`1) 云端（MiMo）` 或 `2) 离线（本地 faster-whisper）`。选离线会跳过 key 提示并自动安装本地识别依赖；选择会写入 `.env`，下次自动沿用
-   - 选云端且未检测到 key 时，会**提示你输入**，输入后自动写入 `.env`
-4. 屏幕会显示「手机访问地址」（如 `https://192.168.x.x:8443`）以及二维码
-5. 按手机系统完成连接（见下方「手机连接」）
-6. 电脑上把光标放到要输入的位置（记事本 / 微信 / 浏览器等），手机说话即可自动输入
+1. **下载项目**：在任意位置新建文件夹并打开，点击资源管理器地址栏输入 `cmd` 回车，在弹出的命令窗口执行：
+
+   ```
+   git clone https://github.com/DJKING792/PhoneMic.git
+   ```
+
+   完成后进入生成的 `PhoneMic` 子文件夹。
+2. **首次放行防火墙**：右键 `allow_firewall.bat` →「以管理员身份运行」（放行 8443 端口，只需一次）。若之后手机提示「已拒绝连接 / ERR_CONNECTION_REFUSED」，多半是这一步没做。
+3. **双击 `start.bat` 启动**：首次会自动创建虚拟环境并安装依赖；随后让你选识别模式——`1` 云端（MiMo，会提示输入免费 Key，申请地址 <https://platform.xiaomimimo.com>）或 `2` 离线（本地 faster-whisper，免 Key）。选择写入 `.env`，下次自动沿用。
+4. 屏幕显示「手机访问地址」（如 `https://192.168.x.x:8443`）和二维码。
+5. 按手机系统完成连接（见下方「手机连接」），把电脑光标放到要输入的位置（记事本 / 微信 / 浏览器等），手机说话即可自动输入
 
 ### macOS / Linux
 
@@ -149,7 +136,7 @@ python voice_input_server.py
 
 **iPhone（以下步骤仅 iPhone 需要，安卓无需）**
 
-自签证书在生成时已把局域网 IP 写进 SAN，且有效期 ≤398 天，符合苹果要求——但 iOS 仍需手动信任。
+iOS 对自签证书较严格，需手动信任，步骤如下：
 
 #### 第 1 步：把根证书传到 iPhone
 
