@@ -86,19 +86,23 @@
 
 ## 快速开始
 
+**下载项目**（任选一种）：
+
+- **方式一（推荐，免装 Git）**：打开 <https://github.com/DJKING792/PhoneMic>，点击绿色 **Code** 按钮 → **Download ZIP**，解压到任意文件夹，进入解压出的 `PhoneMic` 文件夹。
+- **方式二（开发者）**：打开 cmd 执行以下命令，然后进入下载好的 `PhoneMic` 文件夹。
+
+  ```
+  git clone https://github.com/DJKING792/PhoneMic.git
+  ```
+
+> 本机需已安装 **Python 3.10+**（如未安装，可从 <https://www.python.org> 下载，安装时务必勾选「Add python.exe to PATH」）。其余依赖首次运行会自动安装。
+
 ### Windows
 
-1. **下载项目**：在任意位置新建文件夹并打开，点击资源管理器地址栏输入 `cmd` 回车，在弹出的命令窗口执行：
-
-   ```
-   git clone https://github.com/DJKING792/PhoneMic.git
-   ```
-
-   完成后进入生成的 `PhoneMic` 子文件夹。
-2. **首次放行防火墙**：右键 `allow_firewall.bat` →「以管理员身份运行」（放行 8443 端口，只需一次）。若之后手机提示「已拒绝连接 / ERR_CONNECTION_REFUSED」，多半是这一步没做。
-3. **双击 `start.bat` 启动**：首次会自动创建虚拟环境并安装依赖；随后让你选识别模式——`1` 云端（MiMo，会提示输入免费 Key，申请地址 <https://platform.xiaomimimo.com>）或 `2` 离线（本地 faster-whisper，免 Key）。选择写入 `.env`，下次自动沿用。
-4. 屏幕显示「手机访问地址」（如 `https://192.168.x.x:8443`）和二维码。
-5. 按手机系统完成连接（见下方「手机连接」），把电脑光标放到要输入的位置（记事本 / 微信 / 浏览器等），手机说话即可自动输入
+1. **首次放行防火墙**：右键 `allow_firewall.bat` →「以管理员身份运行」（放行 8443 端口，只需一次）。若之后手机提示「已拒绝连接 / ERR_CONNECTION_REFUSED」，多半是这一步没做。
+2. **双击 `start.bat` 启动**：首次会自动创建虚拟环境并安装依赖；随后让你选识别模式——`1` 云端（MiMo，会提示输入免费 Key，申请地址 <https://platform.xiaomimimo.com>）或 `2` 离线（本地 faster-whisper，免 Key）。选择写入 `.env`，下次自动沿用。
+3. 屏幕显示「手机访问地址」（如 `https://192.168.x.x:8443`）和二维码。
+4. 按手机系统完成连接（见下方「手机连接」），把电脑光标放到要输入的位置（记事本 / 微信 / 浏览器等），手机说话即可自动输入
 
 ### macOS / Linux
 
