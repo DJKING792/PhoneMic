@@ -8,52 +8,33 @@
 
 <h1 align="center">PhoneMic</h1>
 
-<p align="center"><b>Turn your phone into a wireless microphone for your PC.</b></p>
-<p align="center">Record in your phone's browser → audio is sent over LAN HTTPS → transcribed by Xiaomi MiMo-V2.5-ASR → the text is pasted into your PC's cursor. No app install, no USB cable — just scan a QR code.</p>
-<p align="center">Use your phone as a wireless microphone for your PC — draft long texts, chat, write code comments, or caption videos by just speaking.</p>
+<p align="center">PhoneMic turns your phone into a wireless microphone for your PC: speak in your phone's browser and the recognized text is typed into your PC's cursor in real time; it supports both Xiaomi MiMo cloud ASR (Chinese / dialects / Chinese-English mix) and local faster-whisper offline mode, stays on your pure LAN with no data leaving your network, and comes with built-in Enter / New-line / Backspace / Clear buttons.</p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"></a>
   <img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square" alt="Python">
   <img src="https://img.shields.io/badge/ASR-MiMo%20V2.5%20%7C%20Whisper-orange?style=flat-square" alt="ASR Engine">
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
-  <img src="https://github.com/DJKING792/PhoneMic/actions/workflows/ci.yml/badge.svg" alt="CI">
-
 </p>
 
 ## Contents
 
-- [Features](#features)
-- [Use cases](#use-cases)
 - [How it works](#how-it-works)
-- [Pro / Offline Mode (local ASR)](#pro--offline-mode-local-asr)
-- [Requirements](#requirements)
 - [Quick Start](#quick-start)
+  - [Download the project](#download-the-project)
   - [Windows](#windows)
-  - [macOS / Linux](#macos--linux)
-  - [Connect your phone](#connect-your-phone)
-  - [Regenerate the certificate](#regenerate-the-certificate)
-- [Getting a free MiMo API key](#getting-a-free-mimo-api-key)
-- [Security](#security)
-- [FAQ](#faq)
-- [License](#license)
-- [Contributing & Support](#contributing--support)
+  - [macOS](#macos)
+  - [Connect your phone](CONNECT_PHONE.md)
 
-## Features
+## Compared with similar tools
 
-- 🎙️ Record from your phone's browser — scan a QR code and go.
-- ☁️ Xiaomi MiMo cloud ASR (Chinese / dialects / Chinese-English mix, with automatic punctuation).
-- 🖥️ **Optional offline mode** — switch to local [faster-whisper](#pro--offline-mode-local-asr) and transcribe fully on your PC: no API key, no internet needed.
-- ⌨️ Transcription is auto-pasted into the PC's active cursor.
-- 🔌 Pure LAN, self-signed HTTPS.
-
-## Use cases
-
-- 📝 **Long-form writing** (articles, essays, blogs) — use your phone as a microphone and voice-input long texts by just speaking.
-- 💬 **Chat in WeChat / Slack / Discord** — a no-install voice input: put the cursor in the box and speak to send.
-- 💻 **Code comments & commit messages** — dictate and the transcript drops into your editor's cursor.
-- 🎬 **Subtitles & meeting notes** — LAN voice recognition turns speech to text in real time.
-- 🗣️ **A voice-input-method replacement** — no third-party IME; your phone becomes a wireless microphone for PC voice input anywhere there's a cursor.
+| Aspect | PhoneMic (this project) | Most similar tools |
+| --- | --- | --- |
+| Phone side | Record in the phone browser, scan to start, no app install | Require an app, or depend on a specific phone IME |
+| Recognition | Xiaomi MiMo cloud (Chinese / dialects / Chinese-English mix) + local faster-whisper offline mode | Usually a single engine / single option |
+| Control keys | Built-in Enter / New-line / Backspace / Clear buttons, standard key events, cross-platform | Often rely on Windows-only AutoHotkey scripts |
+| Cross-platform | Works on Windows / macOS / Linux, no platform lock-in | Often Windows-only |
+| Network & privacy | Pure LAN, data never leaves your network; offline mode keeps audio fully on-device | Often via public internet / third-party relay |
 
 ## How it works
 
@@ -73,12 +54,6 @@ Phone browser                PC (runs this service)
 
 The text is only ever typed into the cursor of **the PC that runs this service**; the phone (or any other LAN device) acts purely as a "wireless microphone".
 
-## Pro / Offline Mode (local ASR)
-
-By default PhoneMic uses Xiaomi's MiMo cloud ASR. If you want everything to stay on your PC — no API key, no internet, fully private — enable **Offline Mode** with a local faster-whisper model. See [requirements-offline.txt](requirements-offline.txt) for details.
-
-⚠️ Offline Mode's Chinese recognition is limited. Whisper is trained mainly on English and is noticeably weaker than MiMo cloud for Chinese (especially dialects, jargon, homophones, and Chinese-English mixing). If your main language is Chinese, Cloud Mode (MiMo) is strongly recommended. Offline Mode fits best when English / general content is the priority and "fully private / offline" comes first — and because audio never leaves the PC, it is also ideal for self-hosted / offline setups.
-
 ## Requirements
 
 - Python 3.10+
@@ -88,38 +63,39 @@ By default PhoneMic uses Xiaomi's MiMo cloud ASR. If you want everything to stay
 
 ## Quick Start
 
-**Download the project** (either way):
+### Download the project
 
-- **Option A — recommended, no Git**: Open <https://github.com/DJKING792/PhoneMic>, click the green **Code** button → **Download ZIP**, unzip to any folder, then open the unzipped `PhoneMic` folder.
-- **Option B — developers**: Open a terminal, run the command below, then enter the downloaded `PhoneMic` folder.
-
-  ```
-  git clone https://github.com/DJKING792/PhoneMic.git
-  ```
-
-> Requires **Python 3.10+** installed on the PC (if you don't have it, get it from <https://www.python.org>, and be sure to tick "Add python.exe to PATH" during setup). The remaining dependencies are installed automatically on first run.
+1. Open the **Releases** page of the GitHub repo.
+2. Download the latest archive (e.g. `PhoneMic-xxx.zip`).
+3. Unzip it to any folder.
+4. Enter the unzipped **`PhoneMic`** folder — all the Windows / macOS steps below run from inside it.
 
 ### Windows
 
-1. **Allow the firewall first**: right-click `allow_firewall.bat` → "Run as administrator" (opens port 8443; one time only). If the phone later shows "connection refused / ERR_CONNECTION_REFUSED", this step was likely skipped.
-2. **Double-click `start.bat` to launch**: On first run it creates a virtualenv and installs dependencies automatically, then asks you to choose the mode — `1` Cloud (MiMo, prompts for a free API key; get one at <https://platform.xiaomimimo.com>) or `2` Offline (local faster-whisper, no key needed). Your choice is saved to `.env` and reused next time.
-3. The screen shows the "phone URL" (e.g. `https://192.168.x.x:8443`) and a QR code.
-4. Connect your phone (see [Connect your phone](#connect-your-phone) below), put the PC cursor wherever you want text (Notepad / WeChat / browser…), and just speak into the phone.
+1. Get a Xiaomi MiMo API key at <https://platform.xiaomimimo.com> (register, then create an API key). *Only needed for Cloud Mode; skip it if you use Offline Mode.*
+2. **Allow the firewall first**: right-click `allow_firewall.bat` → "Run as administrator" (opens port 8443; one time only). If the phone later shows "connection refused / ERR_CONNECTION_REFUSED", this step was likely skipped.
+3. Double-click `start.bat`
+   - On first run it creates a virtualenv and installs dependencies automatically.
+   - It then **asks you to choose the recognition mode**: `1) Cloud (MiMo)` or `2) Offline (local faster-whisper)`. Offline mode skips the API-key prompt and installs the local ASR dependency automatically; your choice is remembered in `.env` for next time.
+   - If you pick Cloud Mode and no key is found, it **prompts you to enter one**, then writes it to `.env` automatically.
+4. The screen shows the "phone URL" (e.g. `https://192.168.x.x:8443`) and a QR code.
+5. Connect your phone by OS (see [Connect your phone](CONNECT_PHONE.md)).
+6. Put the PC cursor wherever you want text (Notepad / WeChat / browser…) and just speak into the phone.
 
-### macOS / Linux
+### macOS
 
-1. Open Terminal and `cd` into the project directory.
-2. Run:
+1. **Install ffmpeg** (for transcoding; pip can't install it): `brew install ffmpeg` (no Homebrew? get it at [brew.sh](https://brew.sh)).
+2. **Grant permissions** (System Settings → Privacy & Security): allow **Python** through the Firewall, and enable **Terminal** under Accessibility (else the phone can't connect or text won't type).
+3. **`cd` into the project and run it:**
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-export MIMO_API_KEY=your_key    # or just create a sibling .env with MIMO_API_KEY=your_key (the server reads it automatically)
+export MIMO_API_KEY=your_key    # or put MIMO_API_KEY=your_key in a .env at the project root
 python voice_input_server.py
 ```
 
-   To use **Offline Mode** instead, replace the last two lines with:
+**Offline Mode** (no API key; audio never leaves your Mac): drop the `export MIMO_API_KEY` line above and end with these three instead — the recognition model is downloaded automatically on first run (default `small`):
 
 ```bash
 pip install faster-whisper
@@ -127,40 +103,7 @@ export PHONEMIC_ASR=local
 python voice_input_server.py
 ```
 
-3. **Open port 8443** (so the phone can connect):
-   - **macOS**: allow **Python** to accept incoming connections in System Settings → Privacy & Security → Firewall. Approve the network prompt on first run. If you once denied it, re-enable Python in the firewall options.
-   - **Linux (ufw)**: `sudo ufw allow 8443`.
-
-After startup the screen shows the "phone URL" and QR code — then follow [Connect your phone](#connect-your-phone).
-
-### Connect your phone
-
-**Android**
-
-1. Scan the QR code on the page, or just type the URL.
-2. When the browser warns "certificate risk / not secure", tap "Advanced → Proceed" and it works normally.
-
-**iPhone** *(these steps are iPhone-only; Android needs none of them)*
-
-iOS is strict about self-signed certificates and requires manual trust. The steps:
-
-**Step 1 — Send the root cert to the iPhone**
-
-1. The cert file is `rootCA.pem` in the **project root** on the server.
-2. Send `rootCA.pem` to the iPhone via AirDrop / Mail / WeChat Files / cloud drive — anything works.
-3. Open the file on the iPhone (or from the Files app) and **install the profile** when prompted. If it doesn't auto-jump, go to **Settings → General → VPN & Device Management** (older iOS: "Profiles") and tap to install manually.
-
-**Step 2 — Enable "full trust" for the cert**
-
-Installing the profile alone is **not enough**. Go to **Settings → General → About → Certificate Trust Settings**, find this project's self-signed cert, and manually turn on **Full Trust**. Without this, Safari still treats it as insecure and refuses to connect.
-
-**Step 3 — Open the page**
-
-Once trust is enabled, open `https://<PC-IP>:8443` on the iPhone (or scan the QR code at `https://<PC-IP>:8443/desktop`). The address bar no longer warns, and you can "press and hold to talk".
-
-### Regenerate the certificate
-
-The certificate is generated with the LAN IP at that moment baked in. If the PC's IP changes (DHCP reassign), regenerate it: delete the 4 cert files in the **project root** (`cert.pem`, `key.pem`, `rootCA.pem`, `rootCA-key.pem`) and restart the service (a new cert is written with the current IP).
+After startup the screen shows the "phone URL" and QR code — then connect your phone (see [Connect your phone](CONNECT_PHONE.md)).
 
 ## Getting a free MiMo API key
 
@@ -169,55 +112,56 @@ Cloud Mode needs a free Xiaomi MiMo API key. Get one in 3 steps:
 <details>
 <summary>📌 Click to expand: 3-step illustrated guide to a free MiMo API key</summary>
 
-**Step 1 — Register / log in**
+**1. Register / log in** at <https://platform.xiaomimimo.com> (Xiaomi account)
 
-1. Open <https://platform.xiaomimimo.com> in your browser.
-2. Click **登录 / Sign in** (top-right) and log in with your Xiaomi account. If you have none, tap **注册 / Register** to create one — it's free.
+![Step 1 — register / log in](assets/mimo-key/mimo-step1-register.png)
 
-![Step 1 — register / log in to platform.xiaomimimo.com](assets/mimo-key/mimo-step1-register.png)
+**2. Console → "API Keys" in the left sidebar**
 
-**Step 2 — Open the API keys page**
+![Step 2 — API keys page](assets/mimo-key/mimo-step2-keys.png)
 
-1. After logging in, go to **控制台 / Console** (usually top-right avatar menu).
-2. In the left sidebar find **API 密钥 / API Keys** (or **开放平台 → 密钥管理**).
-3. You should see a list of your keys (empty at first).
-
-![Step 2 — open the API keys page](assets/mimo-key/mimo-step2-keys.png)
-
-**Step 3 — Create & copy the key**
-
-1. Click **创建密钥 / Create key** (or **+ 新建**).
-2. Give it any name (e.g. `PhoneMic`) and confirm.
-3. **Copy the key immediately** — it is shown only once. Paste it into your `.env` as `MIMO_API_KEY=你的key`, or just run `start.bat` on Windows and paste it when prompted.
+**3. Create a key → copy it immediately** (shown only once) into `.env`: `MIMO_API_KEY=your_key`
 
 ![Step 3 — create & copy the key](assets/mimo-key/mimo-step3-create.png)
 
-> 💡 The MiMo API has a free quota for personal use. Keep your key private — never commit it to a repo (PhoneMic's `.gitignore` already blocks `.env`).
-
 </details>
-
-## Security
-
-- It listens on `0.0.0.0:8443` with **no auth by design** — intended for a **trusted LAN only**.
-- The API key lives only in the local `.env` (blocked by `.gitignore`); the certificate is a local self-sign and is never committed.
-- In **Offline Mode** no audio ever leaves the PC — recognition is fully local.
 
 ## FAQ
 
-**Q: How much latency is there?**
-A: In **Cloud Mode** a typical utterance (a sentence or two) takes about **1–2 seconds** end-to-end — phone capture + LAN upload + MiMo ASR + paste. In **Offline Mode** it depends on model size and hardware: a `small` model on CPU is usually a few hundred ms to ~1–2 s per utterance; a GPU or `tiny`/`base` model is faster.
+<details>
+<summary>❓ How much latency is there?</summary>
 
-**Q: How long can a single clip be?**
-A: There is no hard cap, but each "press-and-hold" is one clip. For best accuracy and lowest latency keep a clip to roughly **tens of seconds to a couple of minutes**; long dictation is best done as a series of short clips — the text streams into your cursor continuously.
+In **Cloud Mode** a typical utterance (a sentence or two) takes about **1–2 seconds** end-to-end — phone capture + LAN upload + MiMo ASR + paste. In **Offline Mode** it depends on model size and hardware: a `small` model on CPU is usually a few hundred ms to ~1–2 s per utterance; a GPU or `tiny`/`base` model is faster.
 
-**Q: Does it work without internet?**
-A: **Cloud Mode** needs internet (to reach MiMo's ASR API), but your **audio is only ever sent across your own LAN to the PC** — it never passes through any third-party relay. If you need **zero internet**, enable **Offline Mode** (`PHONEMIC_ASR=local`): recognition runs entirely on your PC and works fully offline.
+</details>
 
-**Q: Is my audio private?**
-A: In Cloud Mode, audio leaves your LAN only to reach Xiaomi's ASR endpoint for transcription, and PhoneMic stores nothing. In Offline Mode the audio never leaves the PC at all.
+<details>
+<summary>❓ How long can a single clip be?</summary>
 
-**Q: The phone can't connect / "connection refused"?**
-A: On startup the server prints detailed diagnostics (IP / ffmpeg / cert / port / key status) — check there. The PC page `https://localhost:8443/desktop` also has a live connection-status view. Most "refused" cases are the firewall blocking port 8443 (see Quick Start).
+There is no hard cap, but each "press-and-hold" is one clip. For best accuracy and lowest latency keep a clip to roughly **tens of seconds to a couple of minutes**; long dictation is best done as a series of short clips — the text streams into your cursor continuously.
+
+</details>
+
+<details>
+<summary>❓ Does it work without internet?</summary>
+
+**Cloud Mode** needs internet (to reach MiMo's ASR API), but your **audio is only ever sent across your own LAN to the PC** — it never passes through any third-party relay. If you need **zero internet**, enable **Offline Mode** (`PHONEMIC_ASR=local`): recognition runs entirely on your PC and works fully offline.
+
+</details>
+
+<details>
+<summary>❓ Is my audio private?</summary>
+
+In Cloud Mode, audio leaves your LAN only to reach Xiaomi's ASR endpoint for transcription, and PhoneMic stores nothing. In Offline Mode the audio never leaves the PC at all.
+
+</details>
+
+<details>
+<summary>❓ The phone can't connect / "connection refused"?</summary>
+
+On startup the server prints detailed diagnostics (IP / ffmpeg / cert / port / key status) — check there. The PC page `https://localhost:8443/desktop` also has a live connection-status view. Most "refused" cases are the firewall blocking port 8443 (see Quick Start).
+
+</details>
 
 ## License
 
