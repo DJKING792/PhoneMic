@@ -19,6 +19,9 @@ audio_temp/
 *.log
 server_stdout.log
 
+# ---- 发布打包产物 ----
+dist/
+
 # ---- 编辑器 / 系统 ----
 .DS_Store
 Thumbs.db
