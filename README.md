@@ -17,6 +17,8 @@
   <img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square" alt="Python">
   <img src="https://img.shields.io/badge/ASR-MiMo%20V2.5%20%7C%20Whisper-orange?style=flat-square" alt="ASR Engine">
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
+  <img src="https://github.com/DJKING792/PhoneMic/actions/workflows/ci.yml/badge.svg" alt="CI">
+
 </p>
 
 ## Contents
