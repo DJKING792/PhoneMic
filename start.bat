@@ -41,8 +41,10 @@ if defined TYPOMIC_ASR (
 echo.
 echo ============================================================
 echo  请选择语音识别模式：
-echo    1. 云端模式（小米 MiMo，中文/方言强，需免费 API key）
-echo    2. 离线模式（本地 faster-whisper，无需 key、可完全不联网）
+echo    1. 云端模式（小米 MiMo）
+echo       中文 / 方言强，需免费 API key
+echo    2. 离线模式（本地 faster-whisper）
+echo       无需 key，可完全不联网
 echo  当前默认：!ASRMODE!
 echo ============================================================
 set /p "CHOICE=输入 1 或 2（直接回车沿用当前默认）："
