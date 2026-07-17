@@ -1,6 +1,6 @@
 """本地离线语音识别后端（faster-whisper）。
 
-可选功能：设置环境变量 PHONEMIC_ASR=local 后启用。
+可选功能：设置环境变量 TYPOMIC_ASR=local 后启用。
 - 不需要任何云端 API key，识别完全在本机完成（音频不出本机 / 局域网之外的公网）。
 - 首次使用会自动下载 Whisper 模型权重（约几百 MB，仅一次）。
 - 依赖 faster-whisper 为【可选】安装，不污染核心依赖：
@@ -44,7 +44,7 @@ class LocalWhisperASR:
             raise RuntimeError(
                 "离线模式需要 faster-whisper。请先安装：\n"
                 "  pip install faster-whisper\n"
-                "并确认已设置 PHONEMIC_ASR=local。"
+                "并确认已设置 TYPOMIC_ASR=local。"
             )
         import asyncio
 
