@@ -1,14 +1,14 @@
 <p align="center">
-  <a href="README.zh-CN.md">📖 中文文档</a>
+  <a href="README.en.md">📖 English</a>
 </p>
 
 <p align="center">
-  <img src="assets/banner.png" alt="PhoneMic" width="700">
+  <img src="assets/banner.png" alt="TypMic" width="700">
 </p>
 
-<h1 align="center">PhoneMic</h1>
+<h1 align="center">TypMic</h1>
 
-<p align="center">PhoneMic turns your phone into a wireless microphone for your PC: speak in your phone's browser and the recognized text is typed into your PC's cursor in real time; it supports both Xiaomi MiMo cloud ASR (Chinese / dialects / Chinese-English mix) and local faster-whisper offline mode, stays on your pure LAN with no data leaving your network, and comes with built-in Enter / New-line / Backspace / Clear buttons.</p>
+<p align="center">免 App，免接线，直接在手机浏览器里说话，识别出的文字实时输入到电脑光标处；支持中文 / 方言 / 中英混说与本地 faster-whisper 离线双模式，全程纯局域网、数据不出内网，并内置回车 / 换行 / 删除 / 清空 四键控制。</p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"></a>
@@ -17,158 +17,157 @@
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
 </p>
 
-## Contents
+## 目录
 
-- [How it works](#how-it-works)
-- [Quick Start](#quick-start)
-  - [Download the project](#download-the-project)
+- [工作原理](#工作原理)
+- [快速开始](#快速开始)
+  - [项目下载](#项目下载)
   - [Windows](#windows)
   - [macOS](#macos)
-  - [Connect your phone](CONNECT_PHONE.md)
+  - [手机连接](CONNECT_PHONE.md)
 
-## Compared with similar tools
+## 与同类工具对比
 
-| Aspect | PhoneMic (this project) | Most similar tools |
-| --- | --- | --- |
-| Phone side | Record in the phone browser, scan to start, no app install | Require an app, or depend on a specific phone IME |
-| Recognition | Xiaomi MiMo cloud (Chinese / dialects / Chinese-English mix) + local faster-whisper offline mode | Usually a single engine / single option |
-| Control keys | Built-in Enter / New-line / Backspace / Clear buttons, standard key events, cross-platform | Often rely on Windows-only AutoHotkey scripts |
-| Cross-platform | Works on Windows / macOS / Linux, no platform lock-in | Often Windows-only |
-| Network & privacy | Pure LAN, data never leaves your network; offline mode keeps audio fully on-device | Often via public internet / third-party relay |
+| 维度    | TypMic（本项目）                                       | 多数同类方案                       |
+| ----- | --------------------------------------------------- | ---------------------------- |
+| 手机端   | 手机浏览器录音，扫码即用，无需安装 App                               | 需装 App，或依赖特定手机输入法            |
+| 识别能力  | 小米 MiMo 云端（中文 / 方言 / 中英混说）+ 本地 faster-whisper 离线双模式 | 多为单一引擎 / 单方案                 |
+| 控制按键  | 内置 回车 / 换行 / 删除 / 清空 四键，标准按键事件，跨平台                  | 多依赖 Windows 专属 AutoHotkey 脚本 |
+| 跨平台   | Windows / macOS / Linux 通用，无平台绑定                    | 常限定 Windows                  |
+| 网络与隐私 | 纯局域网，数据不出内网；离线模式音频完全不出本机                            | 常经公网 / 第三方中转                 |
 
-## How it works
+## 工作原理
 
 ```
-Phone browser                PC (runs this service)
-    |                              |
-    |---- record (HTTPS POST) --->|  /api/transcribe
-    |                              |      ↓ ffmpeg → 16 kHz mono wav
-    |                              |      ↓ MiMo-V2.5-ASR cloud API   (Cloud Mode)
-    |                              |      ↓ faster-whisper local model   (Offline Mode)
-    |<--- return transcript -------|      ↓ copy to clipboard + Ctrl+V into cursor
+手机浏览器                  电脑（运行本服务）
+    |                           |
+    |---- 录音(HTTPS POST) ---->|  /api/transcribe
+    |                           |      ↓ ffmpeg 转 16k 单声道 wav
+    |                           |      ↓ 调用 MiMo-V2.5-ASR 云端 API   （云端模式）
+    |                           |      ↓ faster-whisper 本地模型        （离线模式）
+    |<--- 返回识别文本 ---------|      ↓ 复制到剪贴板 + Ctrl+V 粘贴到光标
 ```
 
 <p align="center">
-  <img src="assets/demo.gif" alt="PhoneMic demo: speak to your phone, text appears on your PC" width="640">
+  <img src="assets/demo.gif" alt="TypMic 演示：对着手机说话，电脑上自动打出文字" width="640">
 </p>
 
-The text is only ever typed into the cursor of **the PC that runs this service**; the phone (or any other LAN device) acts purely as a "wireless microphone".
-
-## Requirements
+## 环境要求
 
 - Python 3.10+
-- [ffmpeg](https://ffmpeg.org) (must be on your `PATH`)
-- A PC + a phone on the same Wi-Fi
-- A Xiaomi MiMo API key **(Cloud Mode only)** — see [Getting a free MiMo API key](#getting-a-free-mimo-api-key). *Skip this if you use Offline Mode.*
+- [ffmpeg](https://ffmpeg.org)（需加入系统 PATH）
+- 一台电脑 + 同一 WiFi 下的手机
 
-## Quick Start
+## 快速开始
 
-### Download the project
+### 项目下载
 
-1. Open the **Releases** page of the GitHub repo.
-2. Download the latest archive (e.g. `PhoneMic-xxx.zip`).
-3. Unzip it to any folder.
-4. Enter the unzipped **`PhoneMic`** folder — all the Windows / macOS steps below run from inside it.
+1. 打开 GitHub 仓库的 **Releases** 页面。
+2. 下载最新版本的压缩包（如 `TypMic-v1.2.0.zip`）。
+3. 把压缩包解压到任意目录。
+4. 进入解压后的 **`TypMic`** 文件夹。
 
 ### Windows
 
-1. Get a Xiaomi MiMo API key at <https://platform.xiaomimimo.com> (register, then create an API key). *Only needed for Cloud Mode; skip it if you use Offline Mode.*
-2. **Allow the firewall first**: right-click `allow_firewall.bat` → "Run as administrator" (opens port 8443; one time only). If the phone later shows "connection refused / ERR_CONNECTION_REFUSED", this step was likely skipped.
-3. Double-click `start.bat`
-   - On first run it creates a virtualenv and installs dependencies automatically.
-   - It then **asks you to choose the recognition mode**: `1) Cloud (MiMo)` or `2) Offline (local faster-whisper)`. Offline mode skips the API-key prompt and installs the local ASR dependency automatically; your choice is remembered in `.env` for next time.
-   - If you pick Cloud Mode and no key is found, it **prompts you to enter one**, then writes it to `.env` automatically.
-4. The screen shows the "phone URL" (e.g. `https://192.168.x.x:8443`) and a QR code.
-5. Connect your phone by OS (see [Connect your phone](CONNECT_PHONE.md)).
-6. Put the PC cursor wherever you want text (Notepad / WeChat / browser…) and just speak into the phone.
+1. 申请小米 MiMo API key（<https://platform.xiaomimimo.com>，仅云端模式需要）
+2. **首次使用先放行防火墙**：右键 `allow_firewall.bat` →「以管理员身份运行」
+3. 双击 `start.bat`
+4. 按手机系统完成连接（见 [手机连接详解](CONNECT_PHONE.md)）
+5. 电脑上把光标放到要输入的位置，手机说话即可自动输入
 
 ### macOS
 
-1. **Install ffmpeg** (for transcoding; pip can't install it): `brew install ffmpeg` (no Homebrew? get it at [brew.sh](https://brew.sh)).
-2. **Grant permissions** (System Settings → Privacy & Security): allow **Python** through the Firewall, and enable **Terminal** under Accessibility (else the phone can't connect or text won't type).
-3. **`cd` into the project and run it:**
+1. **装 ffmpeg**（转码用，pip 装不了）：`brew install ffmpeg`（没有 Homebrew 先去 [brew.sh](https://brew.sh) 装）。
+2. **开权限**（系统设置 → 隐私与安全性）：防火墙放行 **Python**、辅助功能里给 **终端** 打勾（否则手机连不上或打不出字）。
+3. **进项目目录跑起来**：
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-export MIMO_API_KEY=your_key    # or put MIMO_API_KEY=your_key in a .env at the project root
+export MIMO_API_KEY=你的key    # 或在项目根目录建 .env 写 MIMO_API_KEY=你的key
 python voice_input_server.py
 ```
 
-**Offline Mode** (no API key; audio never leaves your Mac): drop the `export MIMO_API_KEY` line above and end with these three instead — the recognition model is downloaded automatically on first run (default `small`):
+**离线模式**（无需 API key、语音不出本机）：把上面的 `export MIMO_API_KEY` 那行去掉，末尾改跑下面三行——首次启动会自动下载识别模型（默认 `small`）：
 
 ```bash
 pip install faster-whisper
-export PHONEMIC_ASR=local
+export TYPOMIC_ASR=local
 python voice_input_server.py
 ```
 
-After startup the screen shows the "phone URL" and QR code — then connect your phone (see [Connect your phone](CONNECT_PHONE.md)).
+启动后屏幕显示「手机访问地址」和二维码，按 [手机连接详解](CONNECT_PHONE.md) 操作。
 
-## Getting a free MiMo API key
+## 获取免费的小米 MiMo API Key
 
-Cloud Mode needs a free Xiaomi MiMo API key. Get one in 3 steps:
+云端模式需要一个免费的小米 MiMo API Key，3 步即可拿到：
 
 <details>
-<summary>📌 Click to expand: 3-step illustrated guide to a free MiMo API key</summary>
 
-**1. Register / log in** at <https://platform.xiaomimimo.com> (Xiaomi account)
+<summary>📌 点击展开：3 步图文获取免费 MiMo API Key</summary>
 
-![Step 1 — register / log in](assets/mimo-key/mimo-step1-register.png)
+**1. 注册 / 登录** <https://platform.xiaomimimo.com>（小米账号）
 
-**2. Console → "API Keys" in the left sidebar**
+![第 1 步 —— 注册 / 登录](assets/mimo-key/mimo-step1-register.png)
 
-![Step 2 — API keys page](assets/mimo-key/mimo-step2-keys.png)
+**2. 进控制台 → 左侧「API 密钥」**
 
-**3. Create a key → copy it immediately** (shown only once) into `.env`: `MIMO_API_KEY=your_key`
+![第 2 步 —— 密钥管理页](assets/mimo-key/mimo-step2-keys.png)
 
-![Step 3 — create & copy the key](assets/mimo-key/mimo-step3-create.png)
+**3. 创建密钥 → 立刻复制**（只显示一次），填进 `.env`：`MIMO_API_KEY=你的key`
+
+![第 3 步 —— 创建并复制 Key](assets/mimo-key/mimo-step3-create.png)
 
 </details>
 
-## FAQ
+## 常见问题
 
 <details>
-<summary>❓ How much latency is there?</summary>
 
-In **Cloud Mode** a typical utterance (a sentence or two) takes about **1–2 seconds** end-to-end — phone capture + LAN upload + MiMo ASR + paste. In **Offline Mode** it depends on model size and hardware: a `small` model on CPU is usually a few hundred ms to ~1–2 s per utterance; a GPU or `tiny`/`base` model is faster.
+<summary>❓ 延迟大概多少毫秒？</summary>
 
-</details>
-
-<details>
-<summary>❓ How long can a single clip be?</summary>
-
-There is no hard cap, but each "press-and-hold" is one clip. For best accuracy and lowest latency keep a clip to roughly **tens of seconds to a couple of minutes**; long dictation is best done as a series of short clips — the text streams into your cursor continuously.
+**云端模式**下，一段普通语句（一两句话）端到端约 **1–2 秒**——手机采集 + 局域网上传 + MiMo 识别 + 粘贴。 **离线模式**取决于模型大小与硬件：CPU 上 `small` 模型通常每段几百毫秒到约 1–2 秒；用 GPU 或 `tiny`/`base` 模型会更快。
 
 </details>
 
 <details>
-<summary>❓ Does it work without internet?</summary>
 
-**Cloud Mode** needs internet (to reach MiMo's ASR API), but your **audio is only ever sent across your own LAN to the PC** — it never passes through any third-party relay. If you need **zero internet**, enable **Offline Mode** (`PHONEMIC_ASR=local`): recognition runs entirely on your PC and works fully offline.
+<summary>❓ 支持多长的语音？</summary>
 
-</details>
-
-<details>
-<summary>❓ Is my audio private?</summary>
-
-In Cloud Mode, audio leaves your LAN only to reach Xiaomi's ASR endpoint for transcription, and PhoneMic stores nothing. In Offline Mode the audio never leaves the PC at all.
+没有硬性上限，但每次「按住说话」是一段录音。为兼顾识别准确率与延迟，建议单段控制在**几十秒到两三分钟**；长文稿拆成多段短录音效果更好，文字会持续流入光标。
 
 </details>
 
 <details>
-<summary>❓ The phone can't connect / "connection refused"?</summary>
 
-On startup the server prints detailed diagnostics (IP / ffmpeg / cert / port / key status) — check there. The PC page `https://localhost:8443/desktop` also has a live connection-status view. Most "refused" cases are the firewall blocking port 8443 (see Quick Start).
+<summary>❓ 断网能用吗？</summary>
+
+**云端模式**需要联网（调用 MiMo 的 ASR 接口），但你的**音频只会经自己的局域网传到本机电脑**，不经过任何第三方中转。若要做到**完全不联网**，请开启**离线模式**（`TYPOMIC_ASR=local`）：识别全程在本机运行，彻底离线可用。
 
 </details>
 
-## License
+<details>
 
-[MIT](LICENSE) © PhoneMic contributors.
+<summary>❓ 我的语音隐私有保障吗？</summary>
 
-## Contributing & Support
+云端模式下，音频只会离开局域网去访问小米 ASR 接口做转写，TypMic 不存储任何内容；离线模式下音频则完全不出本机。
 
-- Want to help? See [CONTRIBUTING.md](CONTRIBUTING.md).
-- Found a vulnerability? Please follow [SECURITY.md](SECURITY.md).
-- Need help? Check [SUPPORT.md](SUPPORT.md).
+</details>
+
+<details>
+
+<summary>❓ 手机连不上 / 提示「已拒绝连接」？</summary>
+
+启动时会打印详细诊断信息（IP / ffmpeg / 证书 / 端口 / key 状态），连接问题看这里即可；电脑端 `https://localhost:8443/desktop` 还有实时连接状态页。多数「已拒绝连接」是防火墙拦截了 8443 端口（见快速开始）。
+
+</details>
+
+## 许可证
+
+[MIT](LICENSE) © TypMic 贡献者。
+
+## 贡献与支持
+
+- 想参与开发？请看 [CONTRIBUTING.md](CONTRIBUTING.md)。
+- 发现安全漏洞？请遵循 [SECURITY.md](SECURITY.md)。
+- 需要帮助？查看 [SUPPORT.md](SUPPORT.md)。
