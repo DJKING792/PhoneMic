@@ -1,11 +1,13 @@
 @echo off
+chcp 65001 >nul
 setlocal enabledelayedexpansion
 set "BASE=%~dp0"
 set "VENV=%BASE%.venv"
 set "KEYFILE=%BASE%.env"
 set "PYTHON="
 REM 查找可用的 Python（仅用绝对路径，不依赖 PATH 环境变量）
-set "CAND=C:\Python314\python.exe C:\Python313\python.exe C:\Python312\python.exe C:\Users\Ax\.workbuddy\binaries\python\versions\3.13.12\python.exe"
+set "CAND=C:\Python314\python.exe C:\Python313\python.exe C:\Python312\python.exe"
+set "CAND=%CAND% C:\Users\Ax\.workbuddy\binaries\python\versions\3.13.12\python.exe"
 for %%i in (%CAND%) do (
     if not defined PYTHON (
         if exist "%%i" set "PYTHON=%%i"
