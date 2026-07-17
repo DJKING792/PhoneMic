@@ -1,5 +1,4 @@
 @echo off
-chcp 65001 >nul
 setlocal enabledelayedexpansion
 set "BASE=%~dp0"
 set "VENV=%BASE%.venv"
