@@ -1,10 +1,10 @@
-# Contributing to PhoneMic
+# Contributing to TypMic
 
-Thanks for your interest in improving PhoneMic! Contributions of all kinds are welcome — bug reports, docs, translations, and code.
+Thanks for your interest in improving TypMic! Contributions of all kinds are welcome — bug reports, docs, translations, and code.
 
 ## Before you start
 
-- Search [existing issues](https://github.com/DJKING792/PhoneMic/issues) to avoid duplicates.
+- Search [existing issues](https://github.com/DJKING792/TypMic/issues) to avoid duplicates.
 - For anything non-trivial (new feature, behavior change), please **open an issue first** to discuss the approach.
 
 ## Reporting bugs
@@ -19,8 +19,8 @@ Open an issue and include:
 ## Development setup
 
 ```bash
-git clone https://github.com/DJKING792/PhoneMic.git
-cd PhoneMic
+git clone https://github.com/DJKING792/TypMic.git
+cd TypMic
 python3 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
