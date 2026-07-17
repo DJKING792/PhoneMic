@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-PhoneMic 服务端（云端 MiMo ASR API + aiohttp）
+TypMic 服务端（云端 MiMo ASR API + aiohttp）
 手机录音 -> HTTPS POST 音频 -> 调用小米 MiMo-V2.5-ASR 云端识别 -> 粘贴到光标 + 返回结果
 
 设计要点：
@@ -9,7 +9,7 @@ PhoneMic 服务端（云端 MiMo ASR API + aiohttp）
   以便手机用 HTTPS 访问（getUserMedia 需要安全上下文）。
 - 识别走云端 MiMo API（OpenAI 兼容），无需本地下载模型；
   需在环境变量 MIMO_API_KEY 中配置小米 MiMo API key（https://platform.xiaomimimo.com）。
-- 可选【离线模式】：设置 PHONEMIC_ASR=local 后改用本地 faster-whisper 识别，
+- 可选【离线模式】：设置 TYPOMIC_ASR=local 后改用本地 faster-whisper 识别，
   语音不出本机，无需任何 API key（需 pip install faster-whisper，首次会下载模型）。
 - 接口处理中，ffmpeg 转换放到线程，API 请求异步进行，避免卡住事件循环；
   粘贴动作放进 executor，并放慢剪贴板还原节奏，避免粘到旧内容。
@@ -93,7 +93,7 @@ load_dotenv()
 MIMO_API_KEY = os.environ.get("MIMO_API_KEY", "").strip()
 
 # 识别模式：cloud（默认，走小米 MiMo 云端）或 local（本地 faster-whisper 离线）
-ASR_MODE = os.environ.get("PHONEMIC_ASR", "cloud").strip().lower()
+ASR_MODE = os.environ.get("TYPOMIC_ASR", "cloud").strip().lower()
 WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "small").strip() or "small"
 
 asr = None  # 懒加载，避免启动即占内存
@@ -381,6 +381,35 @@ def paste_text(text: str) -> None:
     print(f"[识别+粘贴] {text}", flush=True)
 
 
+def send_key_action(action: str) -> None:
+    """把手机端「回车/换行/删除/清空」指令映射成真实按键事件。
+
+    与语音流程完全解耦：打字或语音都行，对光标处任意输入都生效；
+    发的是标准按键事件，Windows / Mac / Linux 都能识别（无需 AutoHotkey 这类
+    Windows 专属脚本）。实现极轻——手机端只是多发一条控制消息。
+    """
+    try:
+        if action == "enter":
+            # 回车：确认 / 发送
+            pyautogui.press("enter")
+        elif action == "newline":
+            # 换行：Shift+Enter 在大多数软件里只换行不发送（微信 / 聊天框等）
+            pyautogui.hotkey("shift", "enter")
+        elif action == "backspace":
+            # 删除：退格一格
+            pyautogui.press("backspace")
+        elif action == "clear":
+            # 清空：全选 + 删除（macOS 用 Cmd+A，其它用 Ctrl+A）
+            mod = "command" if sys.platform == "darwin" else "ctrl"
+            pyautogui.hotkey(mod, "a")
+            pyautogui.press("backspace")
+        else:
+            return
+        print(f"[按键控制] {action}", flush=True)
+    except Exception as e:
+        print(f"[按键控制] 失败 {action}: {e}", flush=True)
+
+
 # --------------------------------------------------------------------------- #
 # HTTP 接口
 # --------------------------------------------------------------------------- #
@@ -496,6 +525,22 @@ async def transcribe_api(request):
     return web.json_response({"ok": True, "text": text})
 
 
+@routes.post("/api/control")
+async def control_api(request):
+    # 手机端「回车 / 换行 / 删除 / 清空」四个按钮：发标准按键事件到电脑光标。
+    # 与语音流程解耦，对任意输入都生效，且跨平台（Win / Mac / Linux 都认）。
+    try:
+        data = await request.json()
+    except Exception:
+        return web.json_response({"ok": False, "error": "invalid JSON"}, status=400)
+    action = data.get("action") if isinstance(data, dict) else None
+    if action not in ("enter", "newline", "backspace", "clear"):
+        return web.json_response({"ok": False, "error": "unknown action"}, status=400)
+    loop = asyncio.get_running_loop()
+    await loop.run_in_executor(None, send_key_action, action)
+    return web.json_response({"ok": True, "action": action})
+
+
 # --------------------------------------------------------------------------- #
 # 启动
 # --------------------------------------------------------------------------- #
@@ -507,7 +552,7 @@ def print_startup_diagnostics(ip):
     cert_ok = CERT_FILE.exists() and KEY_FILE.exists() and CA_CERT_FILE.exists()
     line = "=" * 60
     print(line)
-    print("PhoneMic - 启动诊断")
+    print("TypMic - 启动诊断")
     print(line)
     print(f"本机局域网 IP : {ip}")
     print(f"手机访问地址  : https://{ip}:8443")
