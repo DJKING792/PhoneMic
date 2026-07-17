@@ -1,23 +1,5 @@
-# 离线模式（本地 faster-whisper）启用说明
-# ------------------------------------------------------------
-# 本文件是离线模式的依赖清单。start.bat 在选「2 离线」时会自动执行：
-#     pip install -r requirements-offline.txt
-# 之后设置 PHONEMIC_ASR=local 即可切换到本地识别引擎。
-#
-# 手动启用方式（macOS / Linux）：
-#   pip install faster-whisper        # 一次性安装；首次运行会下载模型权重（约几百 MB）
-#   export PHONEMIC_ASR=local          # 把识别引擎切换为本地 faster-whisper
-#   # 可选调优：
-#   export WHISPER_MODEL=small         # tiny | base | small | medium | large-v3（默认 small）
-#   export WHISPER_DEVICE=cpu          # cpu | cuda
-#   export WHISPER_COMPUTE=int8        # int8 | float16 ...
-#   python voice_input_server.py
-#
-# Windows 用户：把上述变量直接写进同目录 .env 文件即可，无需用 export：
-#   PHONEMIC_ASR=local
-#   WHISPER_MODEL=small
-# 或双击 start.bat 时选择「2 离线」，会自动装本文件依赖并写入 .env。
-#
-# 首次运行会下载 Whisper 模型权重（约几百 MB），之后缓存复用。
-
-faster-whisper>=1.0
+# 离线模式（本地 faster-whisper 识别）可选依赖。
+# 默认不安装，仅当你要启用 TYPOMIC_ASR=local 时才需要：
+#     pip install -r requirements-offline.txt
+# 首次运行会自动下载 Whisper 模型权重（约几百 MB，仅一次）。
+faster-whisper>=1.0
