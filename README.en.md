@@ -1,1 +1,194 @@
-PHAgYWxpZ249ImNlbnRlciI+DQogIDxhIGhyZWY9IlJFQURNRS5tZCI+8J+TliDkuK3mlofmlofmoaM8L2E+DQo8L3A+DQoNCjxwIGFsaWduPSJjZW50ZXIiPg0KICA8aW1nIHNyYz0iYXNzZXRzL2Jhbm5lci5wbmciIGFsdD0iVHlwTWljIiB3aWR0aD0iNzAwIj4NCjwvcD4NCg0KPGgxIGFsaWduPSJjZW50ZXIiPlR5cE1pYzwvaDE+DQoNCjxwIGFsaWduPSJjZW50ZXIiPlR5cE1pYyB0dXJucyB5b3VyIHBob25lIGludG8gYSB3aXJlbGVzcyBtaWNyb3Bob25lIGZvciB5b3VyIFBDOiBzY2FuIGEgUVIgY29kZSBpbiB5b3VyIHBob25lJ3MgYnJvd3NlciBhbmQgc3RhcnQgc3BlYWtpbmcg4oCUIHRoZSByZWNvZ25pemVkIHRleHQgbGFuZHMgYXQgeW91ciBQQydzIGN1cnNvciwgYXMgaWYgeW91IHdlcmUgdHlwaW5nIHdpdGggeW91ciB2b2ljZS4gTm8gYXBwIGluc3RhbGwsIG5vIGNhYmxlLiBBdWRpbyBpcyBzZW50IG9ubHkgYWNyb3NzIHlvdXIgb3duIExBTiAobmV2ZXIgbGVhdmVzIHlvdXIgbmV0d29yaykuIEl0J3MgbW9yZSB0aGFuIHRyYW5zY3JpcHRpb246IGEgY29tcGxldGUgZGljdGF0aW9uIHdvcmtmbG93IHdpdGggZHVhbCBBU1IgZW5naW5lcyAoWGlhb21pIE1pTW8gY2xvdWQgKyBsb2NhbCBXaGlzcGVyKSwgYSBnbG9zc2FyeSB0aGF0IGZpeGVzIG1pcy1oZWFyZCB0ZXJtcywgb3B0aW9uYWwgQUkgcG9saXNoIChhdXRvLXB1bmN0dWF0aW9uIC8gY29tbWFuZCB3b3JkcyAvIGRlLWZpbGxlciksIGFuZCBhIGxpdmUgcGlwZWxpbmUgKyBkYWlseS11c2FnZSBzdGF0cyBvbiB0aGUgUEMgcGFnZSDigJQgc28gZGljdGF0aW9uIHR1cm5zIHN0cmFpZ2h0IGludG8gdXNhYmxlIHRleHQuIEJ1aWx0LWluIEVudGVyIC8gTmV3LWxpbmUgLyBCYWNrc3BhY2UgLyBDbGVhciBrZXlzOyBXaW5kb3dzIC8gbWFjT1MgLyBMaW51eC48L3A+DQoNCjxwIGFsaWduPSJjZW50ZXIiPg0KICA8YSBocmVmPSJMSUNFTlNFIj48aW1nIHNyYz0iaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9iYWRnZS9MaWNlbnNlLU1JVC1ncmVlbj9zdHlsZT1mbGF0LXNxdWFyZSIgYWx0PSJMaWNlbnNlIj48L2E+DQogIDxpbWcgc3JjPSJodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1B5dGhvbi0zLjEwJTJCLWJsdWU/c3R5bGU9ZmxhdC1zcXVhcmUiIGFsdD0iUHl0aG9uIj4NCiAgPGltZyBzcmM9Imh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2UvQVNSLU1pTW8lMjBWMi41JTIwJTdDJTIwV2hpc3Blci1vcmFuZ2U/c3R5bGU9ZmxhdC1zcXVhcmUiIGFsdD0iQVNSIEVuZ2luZSI+DQogIDxpbWcgc3JjPSJodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1BsYXRmb3JtLVdpbmRvd3MlMjAlN0MlMjBtYWNPUyUyMCU3QyUyMExpbnV4LWxpZ2h0Z3JleT9zdHlsZT1mbGF0LXNxdWFyZSIgYWx0PSJQbGF0Zm9ybSI+DQogIDxpbWcgc3JjPSJodHRwczovL2dpdGh1Yi5jb20vREpLSU5HNzkyL1R5cE1pYy9hY3Rpb25zL3dvcmtmbG93cy9jaS55bWwvYmFkZ2Uuc3ZnIiBhbHQ9IkNJIj4NCjwvcD4NCg0KIyMgQ29udGVudHMNCg0KLSBbSG93IGl0IHdvcmtzXSgjaG93LWl0LXdvcmtzKQ0KLSBbUXVpY2sgU3RhcnRdKCNxdWljay1zdGFydCkNCiAgLSBbRG93bmxvYWQgdGhlIHByb2plY3RdKCNkb3dubG9hZC10aGUtcHJvamVjdCkNCiAgLSBbV2luZG93c10oI3dpbmRvd3MpDQogIC0gW21hY09TXSgjbWFjb3MpDQogIC0gW0Nvbm5lY3QgeW91ciBwaG9uZV0oQ09OTkVDVF9QSE9ORS5lbi5tZCkNCg0KIyMgQ29tcGFyZWQgd2l0aCBzaW1pbGFyIHRvb2xzDQoNCnwgQXNwZWN0IHwgVHlwTWljICh0aGlzIHByb2plY3QpIHwgTW9zdCBzaW1pbGFyIHRvb2xzIHwNCnwgLS0tIHwgLS0tIHwgLS0tIHwNCnwgUGhvbmUgc2lkZSB8IFJlY29yZCBpbiB0aGUgcGhvbmUgYnJvd3Nlciwgc2NhbiB0byBzdGFydCwgbm8gYXBwIGluc3RhbGwgfCBSZXF1aXJlIGFuIGFwcCwgb3IgZGVwZW5kIG9uIGEgc3BlY2lmaWMgcGhvbmUgSU1FIHwNCnwgUmVjb2duaXRpb24gfCBYaWFvbWkgTWlNbyBjbG91ZCAoQ2hpbmVzZSAvIGRpYWxlY3RzIC8gQ2hpbmVzZS1FbmdsaXNoIG1peCkgKyBsb2NhbCBmYXN0ZXItd2hpc3BlciBvZmZsaW5lIG1vZGUgfCBVc3VhbGx5IGEgc2luZ2xlIGVuZ2luZSAvIHNpbmdsZSBvcHRpb24gfA0KfCBDb250cm9sIGtleXMgfCBCdWlsdC1pbiBFbnRlciAvIE5ldy1saW5lIC8gQmFja3NwYWNlIC8gQ2xlYXIgYnV0dG9ucywgc3RhbmRhcmQga2V5IGV2ZW50cywgY3Jvc3MtcGxhdGZvcm0gfCBPZnRlbiByZWx5IG9uIFdpbmRvd3Mtb25seSBBdXRvSG90a2V5IHNjcmlwdHMgfA0KfCBDcm9zcy1wbGF0Zm9ybSB8IFdvcmtzIG9uIFdpbmRvd3MgLyBtYWNPUyAvIExpbnV4LCBubyBwbGF0Zm9ybSBsb2NrLWluIHwgT2Z0ZW4gV2luZG93cy1vbmx5IHwNCnwgTmV0d29yayAmIHByaXZhY3kgfCBQdXJlIExBTiwgZGF0YSBuZXZlciBsZWF2ZXMgeW91ciBuZXR3b3JrOyBvZmZsaW5lIG1vZGUga2VlcHMgYXVkaW8gZnVsbHkgb24tZGV2aWNlIHwgT2Z0ZW4gdmlhIHB1YmxpYyBpbnRlcm5ldCAvIHRoaXJkLXBhcnR5IHJlbGF5IHwNCg0KIyMgSG93IGl0IHdvcmtzDQoNCmBgYA0KUGhvbmUgYnJvd3NlciAgICAgICAgICAgICAgICBQQyAocnVucyB0aGlzIHNlcnZpY2UpDQogICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwNCiAgICB8LS0tLSByZWNvcmQgKEhUVFBTIFBPU1QpIC0tLT58ICAvYXBpL3RyYW5zY3JpYmUNCiAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAgIOKGkyBmZm1wZWcg4oaSIDE2IGtIeiBtb25vIHdhdg0KICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgICAg4oaTIE1pTW8tVjIuNS1BU1IgY2xvdWQgQVBJICAgKENsb3VkIE1vZGUpDQogICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICDihpMgZmFzdGVyLXdoaXNwZXIgbG9jYWwgbW9kZWwgICAoT2ZmbGluZSBNb2RlKQ0KICAgIHw8LS0tIHJldHVybiB0cmFuc2NyaXB0IC0tLS0tLS18ICAgICAg4oaTIGNvcHkgdG8gY2xpcGJvYXJkICsgQ3RybCtWIGludG8gY3Vyc29yDQpgYGANCg0KPHAgYWxpZ249ImNlbnRlciI+DQogIDxpbWcgc3JjPSJhc3NldHMvZGVtby5naWYiIGFsdD0iVHlwTWljIGRlbW86IHNwZWFrIHRvIHlvdXIgcGhvbmUsIHRleHQgYXBwZWFycyBvbiB5b3VyIFBDIiB3aWR0aD0iNjQwIj4NCjwvcD4NCg0KVGhlIHRleHQgaXMgb25seSBldmVyIHR5cGVkIGludG8gdGhlIGN1cnNvciBvZiAqKnRoZSBQQyB0aGF0IHJ1bnMgdGhpcyBzZXJ2aWNlKio7IHRoZSBwaG9uZSAob3IgYW55IG90aGVyIExBTiBkZXZpY2UpIGFjdHMgcHVyZWx5IGFzIGEgIndpcmVsZXNzIG1pY3JvcGhvbmUiLg0KDQojIyBSZXF1aXJlbWVudHMNCg0KLSBQeXRob24gMy4xMCsNCi0gW2ZmbXBlZ10oaHR0cHM6Ly9mZm1wZWcub3JnKSAobXVzdCBiZSBvbiB5b3VyIGBQQVRIYCkNCi0gQSBQQyArIGEgcGhvbmUgb24gdGhlIHNhbWUgV2ktRmkNCi0gQSBYaWFvbWkgTWlNbyBBUEkga2V5ICoqKENsb3VkIE1vZGUgb25seSkqKiDigJQgc2VlIFtHZXR0aW5nIGEgZnJlZSBNaU1vIEFQSSBrZXldKCNnZXR0aW5nLWEtZnJlZS1taW1vLWFwaS1rZXkpLiAqU2tpcCB0aGlzIGlmIHlvdSB1c2UgT2ZmbGluZSBNb2RlLioNCg0KIyMgUXVpY2sgU3RhcnQNCg0KIyMjIERvd25sb2FkIHRoZSBwcm9qZWN0DQoNCjEuIE9wZW4gdGhlICoqUmVsZWFzZXMqKiBwYWdlIG9mIHRoZSBHaXRIdWIgcmVwby4NCjIuIERvd25sb2FkIHRoZSBsYXRlc3QgYXJjaGl2ZSAoZS5nLiBgVHlwTWljLXh4eC56aXBgKS4NCjMuIFVuemlwIGl0IHRvIGFueSBmb2xkZXIuDQo0LiBFbnRlciB0aGUgdW56aXBwZWQgKipgVHlwTWljYCoqIGZvbGRlciDigJQgYWxsIHRoZSBXaW5kb3dzIC8gbWFjT1Mgc3RlcHMgYmVsb3cgcnVuIGZyb20gaW5zaWRlIGl0Lg0KDQojIyMgV2luZG93cw0KDQoxLiBHZXQgYSBYaWFvbWkgTWlNbyBBUEkga2V5IGF0IDxodHRwczovL3BsYXRmb3JtLnhpYW9taW1pbW8uY29tPiAocmVnaXN0ZXIsIHRoZW4gY3JlYXRlIGFuIEFQSSBrZXkpLiAqT25seSBuZWVkZWQgZm9yIENsb3VkIE1vZGU7IHNraXAgaXQgaWYgeW91IHVzZSBPZmZsaW5lIE1vZGUuKg0KMi4gKipBbGxvdyB0aGUgZmlyZXdhbGwgZmlyc3QqKjogcmlnaHQtY2xpY2sgYGFsbG93X2ZpcmV3YWxsLmJhdGAg4oaSICJSdW4gYXMgYWRtaW5pc3RyYXRvciIgKG9wZW5zIHBvcnQgODQ0Mzsgb25lIHRpbWUgb25seSkuIElmIHRoZSBwaG9uZSBsYXRlciBzaG93cyAiY29ubmVjdGlvbiByZWZ1c2VkIC8gRVJSX0NPTk5FQ1RJT05fUkVGVVNFRCIsIHRoaXMgc3RlcCB3YXMgbGlrZWx5IHNraXBwZWQuDQozLiBEb3VibGUtY2xpY2sgYHN0YXJ0LmJhdGANCiAgIC0gT24gZmlyc3QgcnVuIGl0IGNyZWF0ZXMgYSB2aXJ0dWFsZW52IGFuZCBpbnN0YWxscyBkZXBlbmRlbmNpZXMgYXV0b21hdGljYWxseS4NCiAgIC0gSXQgdGhlbiAqKmFza3MgeW91IHRvIGNob29zZSB0aGUgcmVjb2duaXRpb24gbW9kZSoqOiBgMSkgQ2xvdWQgKE1pTW8pYCBvciBgMikgT2ZmbGluZSAobG9jYWwgZmFzdGVyLXdoaXNwZXIpYC4gT2ZmbGluZSBtb2RlIHNraXBzIHRoZSBBUEkta2V5IHByb21wdCBhbmQgaW5zdGFsbHMgdGhlIGxvY2FsIEFTUiBkZXBlbmRlbmN5IGF1dG9tYXRpY2FsbHk7IHlvdXIgY2hvaWNlIGlzIHJlbWVtYmVyZWQgaW4gYC5lbnZgIGZvciBuZXh0IHRpbWUuDQogICAtIEl0IGFsc28gYXNrcyBhYm91dCAqKkFJIHBvbGlzaCoqIChkZWZhdWx0OiBhdXRvLXB1bmN0dWF0aW9uIG9ubHkpIGFuZCAqKmdsb3NzYXJ5KiogKGRlZmF1bHQ6IG9uKTsganVzdCBwcmVzcyBFbnRlciB0byBhY2NlcHQgdGhlIGRlZmF1bHRzIOKAlCBubyBjb25maWcgbmVlZGVkLg0KICAgLSBJZiB5b3UgcGljayBDbG91ZCBNb2RlIGFuZCBubyBrZXkgaXMgZm91bmQsIGl0ICoqcHJvbXB0cyB5b3UgdG8gZW50ZXIgb25lKiosIHRoZW4gd3JpdGVzIGl0IHRvIGAuZW52YCBhdXRvbWF0aWNhbGx5Lg0KNC4gVGhlIHNjcmVlbiBzaG93cyB0aGUgInBob25lIFVSTCIgKGUuZy4gYGh0dHBzOi8vMTkyLjE2OC54Lng6ODQ0M2ApIGFuZCBhIFFSIGNvZGUuDQo1LiBDb25uZWN0IHlvdXIgcGhvbmUgYnkgT1MgKHNlZSBbQ29ubmVjdCB5b3VyIHBob25lXShDT05ORUNUX1BIT05FLmVuLm1kKSkuDQo2LiBQdXQgdGhlIFBDIGN1cnNvciB3aGVyZXZlciB5b3Ugd2FudCB0ZXh0IChOb3RlcGFkIC8gV2VDaGF0IC8gYnJvd3NlcuKApikgYW5kIGp1c3Qgc3BlYWsgaW50byB0aGUgcGhvbmUuDQoNCiMjIyBtYWNPUw0KDQoxLiAqKkluc3RhbGwgZmZtcGVnKiogKGZvciB0cmFuc2NvZGluZzsgcGlwIGNhbid0IGluc3RhbGwgaXQpOiBgYnJldyBpbnN0YWxsIGZmbXBlZ2AgKG5vIEhvbWVicmV3PyBnZXQgaXQgYXQgW2JyZXcuc2hdKGh0dHBzOi8vYnJldy5zaCkpLg0KMi4gKipHcmFudCBwZXJtaXNzaW9ucyoqIChTeXN0ZW0gU2V0dGluZ3Mg4oaSIFByaXZhY3kgJiBTZWN1cml0eSk6IGFsbG93ICoqUHl0aG9uKiogdGhyb3VnaCB0aGUgRmlyZXdhbGwsIGFuZCBlbmFibGUgKipUZXJtaW5hbCoqIHVuZGVyIEFjY2Vzc2liaWxpdHkgKGVsc2UgdGhlIHBob25lIGNhbid0IGNvbm5lY3Qgb3IgdGV4dCB3b24ndCB0eXBlKS4NCjMuICoqYGNkYCBpbnRvIHRoZSBwcm9qZWN0IGFuZCBydW4gaXQ6KioNCg0KYGBgYmFzaA0KcHl0aG9uMyAtbSB2ZW52IC52ZW52ICYmIHNvdXJjZSAudmVudi9iaW4vYWN0aXZhdGUNCnBpcCBpbnN0YWxsIC1yIHJlcXVpcmVtZW50cy50eHQNCmV4cG9ydCBNSU1PX0FQSV9LRVk9eW91cl9rZXkgICAgIyBvciBwdXQgTUlNT19BUElfS0VZPXlvdXJfa2V5IGluIGEgLmVudiBhdCB0aGUgcHJvamVjdCByb290DQpweXRob24gdm9pY2VfaW5wdXRfc2VydmVyLnB5DQpgYGANCg0KKipPZmZsaW5lIE1vZGUqKiAobm8gQVBJIGtleTsgYXVkaW8gbmV2ZXIgbGVhdmVzIHlvdXIgTWFjKTogZHJvcCB0aGUgYGV4cG9ydCBNSU1PX0FQSV9LRVlgIGxpbmUgYWJvdmUgYW5kIGVuZCB3aXRoIHRoZXNlIHRocmVlIGluc3RlYWQg4oCUIHRoZSByZWNvZ25pdGlvbiBtb2RlbCBpcyBkb3dubG9hZGVkIGF1dG9tYXRpY2FsbHkgb24gZmlyc3QgcnVuIChkZWZhdWx0IGBzbWFsbGApOg0KDQpgYGBiYXNoDQpwaXAgaW5zdGFsbCBmYXN0ZXItd2hpc3Blcg0KZXhwb3J0IFRZUE9NSUNfQVNSPWxvY2FsDQpweXRob24gdm9pY2VfaW5wdXRfc2VydmVyLnB5DQpgYGANCg0KQWZ0ZXIgc3RhcnR1cCB0aGUgc2NyZWVuIHNob3dzIHRoZSAicGhvbmUgVVJMIiBhbmQgUVIgY29kZSDigJQgdGhlbiBjb25uZWN0IHlvdXIgcGhvbmUgKHNlZSBbQ29ubmVjdCB5b3VyIHBob25lXShDT05ORUNUX1BIT05FLmVuLm1kKSkuDQoNCiMjIEdldHRpbmcgYSBmcmVlIE1pTW8gQVBJIGtleQ0KDQpDbG91ZCBNb2RlIG5lZWRzIGEgZnJlZSBYaWFvbWkgTWlNbyBBUEkga2V5LiBHZXQgb25lIGluIDMgc3RlcHM6DQoNCjxkZXRhaWxzPg0KPHN1bW1hcnk+8J+TjCBDbGljayB0byBleHBhbmQ6IDMtc3RlcCBpbGx1c3RyYXRlZCBndWlkZSB0byBhIGZyZWUgTWlNbyBBUEkga2V5PC9zdW1tYXJ5Pg0KDQoqKjEuIFJlZ2lzdGVyIC8gbG9nIGluKiogYXQgPGh0dHBzOi8vcGxhdGZvcm0ueGlhb21pbWltby5jb20+IChYaWFvbWkgYWNjb3VudCkNCg0KIVtTdGVwIDEg4oCUIHJlZ2lzdGVyIC8gbG9nIGluXShhc3NldHMvbWltby1rZXkvbWltby1zdGVwMS1yZWdpc3Rlci5wbmcpDQoNCioqMi4gQ29uc29sZSDihpIgIkFQSSBLZXlzIiBpbiB0aGUgbGVmdCBzaWRlYmFyKioNCg0KIVtTdGVwIDIg4oCUIEFQSSBrZXlzIHBhZ2VdKGFzc2V0cy9taW1vLWtleS9taW1vLXN0ZXAyLWtleXMucG5nKQ0KDQoqKjMuIENyZWF0ZSBhIGtleSDihpIgY29weSBpdCBpbW1lZGlhdGVseSoqIChzaG93biBvbmx5IG9uY2UpIGludG8gYC5lbnZgOiBgTUlNT19BUElfS0VZPXlvdXJfa2V5YA0KDQohW1N0ZXAgMyDigJQgY3JlYXRlICYgY29weSB0aGUga2V5XShhc3NldHMvbWltby1rZXkvbWltby1zdGVwMy1jcmVhdGUucG5nKQ0KDQo8L2RldGFpbHM+DQoNCj4g4pqg77iPICoqQ29zdCBub3RlIChyZWFkIGJlZm9yZSBlbmFibGluZyBBSSBwb2xpc2gpKioNCj4gU3BlZWNoICoqcmVjb2duaXRpb24gKEFTUikqKiB2aWEgTWlNbyBpcyBiaWxsZWQgYnkgYXVkaW8gbGVuZ3RoOiAqKsKlMC41IC8gaG91cioqIChgbWltby12Mi41LWFzcmApIOKAlCBleHRyZW1lbHkgY2hlYXAgYnV0ICoqbm90IGZyZWUqKi4gKipBSSBwb2xpc2gqKiwgYnkgY29udHJhc3QsIGNhbGxzIHRoZSBMTE0gKipjaGF0IGVuZHBvaW50KiogYW5kIGlzIGJpbGxlZCAqKnBlciB0b2tlbioqIChkZWZhdWx0IGBtaW1vLXYyLjVgIHNlcmllczogaW5wdXQgwqUxLjAwIC8gTVRvaywgb3V0cHV0IMKlMi4wMCAvIE1Ub2s7IGNhY2hlLWhpdCBpbnB1dCBqdXN0IMKlMC4wMikuDQo+IE5ldyBhY2NvdW50cyBnZXQgKirCpTEwIEFQSSB0cmlhbCBjcmVkaXQgKHZhbGlkIDQwIGRheXMpKiog4oCUIGVub3VnaCBmb3IgYSBsb25nIHdoaWxlOg0KPg0KPiB8IFVzYWdlIHwgSG93IGxvbmcgwqUxMCBsYXN0cyB8DQo+IHwgLS0tIHwgLS0tIHwNCj4gfCBSZWNvZ25pdGlvbiBvbmx5IChubyBwb2xpc2gpIHwgfioqMjAgYXVkaW8taG91cnMqKiDihpIgfioqNDAgZGF5cyoqIGF0IDMwIG1pbi9kYXkgfA0KPiB8IFJlY29nbml0aW9uICsgQUkgcG9saXNoIChkZWZhdWx0ICJwdW5jdHVhdGUgb25seSIpIHwgKip+MzUgZGF5cyoqIGF0IDMwIG1pbi9kYXkgKH42LDAwMCBjaGFycyk7IG1vbnRocyBpZiB1c2VkIG9jY2FzaW9uYWxseSB8DQo+IHwgUG9saXNoIGFsb25lIChyZWZlcmVuY2UpIHwgfjEuOCB0b2tlbnMvQ2hpbmVzZSBjaGFyLCDiiYggwqUwLjAwNSAvIDFrIGNoYXJzIOKGkiDCpTEwIHBvbGlzaGVzICoqfjEuODVNIGNoYXJzICjiiYgxNTDigJMyNjAgc3BlYWtpbmctaG91cnMpKiogfA0KPg0KPiBJbiBzaG9ydDogdGhlIHRyaWFsLWNyZWRpdCBwaGFzZSBpcyBlZmZlY3RpdmVseSBmcmVlLiBBZnRlciBpdCBydW5zIG91dCB5b3UgY2FuIHRvcCB1cCBieSB1c2FnZSAocmVhbC1uYW1lIHZlcmlmaWNhdGlvbiByZXF1aXJlZCkuIEZvciAqKnplcm8gY29zdCoqLCB0dXJuIG9mZiBBSSBwb2xpc2ggYW5kIHVzZSBPZmZsaW5lIE1vZGUg4oCUIG9mZmxpbmUgcmVjb2duaXRpb24gcnVucyBvbiB5b3VyIFBDIGFuZCBjYWxscyBubyBNaU1vIEFQSSBhdCBhbGwuDQoNCiMjIEFJIHBvbGlzaCAmIGdsb3NzYXJ5IChvcHRpb25hbCkNCg0KVHlwTWljIGVuYWJsZXMgdHdvIHBvc3QtcHJvY2Vzc2luZyBzdGVwcyBieSBkZWZhdWx0OiAqKmF1dG8tcHVuY3R1YXRpb24qKiArICoqY29ycmVjdGluZyBtaXMtaGVhcmQgdGVybXMqKiAoZS5nLiBwcm9kdWN0IG5hbWVzKSBzbyB0aGUgZGljdGF0ZWQgdGV4dCBpcyByZWFkeSB0byB1c2UuIEJvdGggY2FuIGJlIHRvZ2dsZWQgaW4gdGhlIGBzdGFydC5iYXRgIGxhdW5jaCBtZW51OyAqKm9uIGJ5IGRlZmF1bHQsIG5vIGNvbmZpZyBuZWVkZWQqKi4NCg0KPiBXaGVuIEFJIHBvbGlzaCBpcyBvbiwgdGhlIHJlY29nbml6ZWQgdGV4dCBpcyBzZW50IHRvIHlvdXIgTWlNbyBlbmRwb2ludCBmb3IgY2xlYW51cC4gVG8ga2VlcCBldmVyeXRoaW5nIGZ1bGx5IGxvY2FsLCBqdXN0IHR1cm4gaXQgb2ZmIGluIHRoZSBtZW51IChhdWRpbyBhbHdheXMgc3RheXMgb24geW91ciBMQU4pLg0KDQojIyBGQVENCg0KPGRldGFpbHM+DQo8c3VtbWFyeT7inZMgSG93IG11Y2ggbGF0ZW5jeSBpcyB0aGVyZT88L3N1bW1hcnk+DQoNCkluICoqQ2xvdWQgTW9kZSoqIGEgdHlwaWNhbCB1dHRlcmFuY2UgKGEgc2VudGVuY2Ugb3IgdHdvKSB0YWtlcyBhYm91dCAqKjHigJMyIHNlY29uZHMqKiBlbmQtdG8tZW5kIOKAlCBwaG9uZSBjYXB0dXJlICsgTEFOIHVwbG9hZCArIE1pTW8gQVNSICsgcGFzdGUuIEluICoqT2ZmbGluZSBNb2RlKiogaXQgZGVwZW5kcyBvbiBtb2RlbCBzaXplIGFuZCBoYXJkd2FyZTogYSBgc21hbGxgIG1vZGVsIG9uIENQVSBpcyB1c3VhbGx5IGEgZmV3IGh1bmRyZWQgbXMgdG8gfjHigJMyIHMgcGVyIHV0dGVyYW5jZTsgYSBHUFUgb3IgYHRpbnlgL2BiYXNlYCBtb2RlbCBpcyBmYXN0ZXIuDQoNCjwvZGV0YWlscz4NCg0KPGRldGFpbHM+DQo8c3VtbWFyeT7inZMgSG93IGxvbmcgY2FuIGEgc2luZ2xlIGNsaXAgYmU/PC9zdW1tYXJ5Pg0KDQpUaGVyZSBpcyBubyBoYXJkIGNhcCwgYnV0IGVhY2ggInByZXNzLWFuZC1ob2xkIiBpcyBvbmUgY2xpcC4gRm9yIGJlc3QgYWNjdXJhY3kgYW5kIGxvd2VzdCBsYXRlbmN5IGtlZXAgYSBjbGlwIHRvIHJvdWdobHkgKip0ZW5zIG9mIHNlY29uZHMgdG8gYSBjb3VwbGUgb2YgbWludXRlcyoqOyBsb25nIGRpY3RhdGlvbiBpcyBiZXN0IGRvbmUgYXMgYSBzZXJpZXMgb2Ygc2hvcnQgY2xpcHMg4oCUIHRoZSB0ZXh0IHN0cmVhbXMgaW50byB5b3VyIGN1cnNvciBjb250aW51b3VzbHkuDQoNCjwvZGV0YWlscz4NCg0KPGRldGFpbHM+DQo8c3VtbWFyeT7inZMgRG9lcyBpdCB3b3JrIHdpdGhvdXQgaW50ZXJuZXQ/PC9zdW1tYXJ5Pg0KDQoqKkNsb3VkIE1vZGUqKiBuZWVkcyBpbnRlcm5ldCAodG8gcmVhY2ggTWlNbydzIEFTUiBBUEkpLCBidXQgeW91ciAqKmF1ZGlvIGlzIG9ubHkgZXZlciBzZW50IGFjcm9zcyB5b3VyIG93biBMQU4gdG8gdGhlIFBDKiog4oCUIGl0IG5ldmVyIHBhc3NlcyB0aHJvdWdoIGFueSB0aGlyZC1wYXJ0eSByZWxheS4gSWYgeW91IG5lZWQgKip6ZXJvIGludGVybmV0KiosIGVuYWJsZSAqKk9mZmxpbmUgTW9kZSoqIChgVFlQT01JQ19BU1I9bG9jYWxgKTogcmVjb2duaXRpb24gcnVucyBlbnRpcmVseSBvbiB5b3VyIFBDIGFuZCB3b3JrcyBmdWxseSBvZmZsaW5lLg0KDQo8L2RldGFpbHM+DQoNCjxkZXRhaWxzPg0KPHN1bW1hcnk+4p2TIElzIG15IGF1ZGlvIHByaXZhdGU/PC9zdW1tYXJ5Pg0KDQpJbiBDbG91ZCBNb2RlLCBhdWRpbyBsZWF2ZXMgeW91ciBMQU4gb25seSB0byByZWFjaCBYaWFvbWkncyBBU1IgZW5kcG9pbnQgZm9yIHRyYW5zY3JpcHRpb24sIGFuZCBUeXBNaWMgc3RvcmVzIG5vdGhpbmcuIEluIE9mZmxpbmUgTW9kZSB0aGUgYXVkaW8gbmV2ZXIgbGVhdmVzIHRoZSBQQyBhdCBhbGwuDQoNCjwvZGV0YWlscz4NCg0KPGRldGFpbHM+DQo8c3VtbWFyeT7inZMgVGhlIHBob25lIGNhbid0IGNvbm5lY3QgLyAiY29ubmVjdGlvbiByZWZ1c2VkIj88L3N1bW1hcnk+DQoNCk9uIHN0YXJ0dXAgdGhlIHNlcnZlciBwcmludHMgZGV0YWlsZWQgZGlhZ25vc3RpY3MgKElQIC8gZmZtcGVnIC8gY2VydCAvIHBvcnQgLyBrZXkgc3RhdHVzKSDigJQgY2hlY2sgdGhlcmUuIFRoZSBQQyBwYWdlIGBodHRwczovL2xvY2FsaG9zdDo4NDQzL2Rlc2t0b3BgIGFsc28gaGFzIGEgbGl2ZSBjb25uZWN0aW9uLXN0YXR1cyB2aWV3LiBNb3N0ICJyZWZ1c2VkIiBjYXNlcyBhcmUgdGhlIGZpcmV3YWxsIGJsb2NraW5nIHBvcnQgODQ0MyAoc2VlIFF1aWNrIFN0YXJ0KS4NCg0KPC9kZXRhaWxzPg0KDQojIyBMaWNlbnNlDQoNCltNSVRdKExJQ0VOU0UpIMKpIFR5cE1pYyBjb250cmlidXRvcnMuDQoNCiMjIENvbnRyaWJ1dGluZyAmIFN1cHBvcnQNCg0KLSBXYW50IHRvIGhlbHA/IFNlZSBbQ09OVFJJQlVUSU5HLm1kXShDT05UUklCVVRJTkcubWQpLg0KLSBGb3VuZCBhIHZ1bG5lcmFiaWxpdHk/IFBsZWFzZSBmb2xsb3cgW1NFQ1VSSVRZLm1kXShTRUNVUklUWS5tZCkuDQotIE5lZWQgaGVscD8gQ2hlY2sgW1NVUFBPUlQubWRdKFNVUFBPUlQubWQpLg0K
+<p align="center">
+  <a href="README.md">📖 中文文档</a>
+</p>
+
+<p align="center">
+  <img src="assets/banner.png" alt="TypMic" width="700">
+</p>
+
+<h1 align="center">TypMic</h1>
+
+<p align="center">TypMic turns your phone into a wireless microphone for your PC: scan a QR code in your phone's browser and start speaking — the recognized text lands at your PC's cursor, as if you were typing with your voice. No app install, no cable. Audio is sent only across your own LAN (never leaves your network). It's more than transcription: a complete dictation workflow with dual ASR engines (Xiaomi MiMo cloud + local Whisper), a glossary that fixes mis-heard terms, optional AI polish (auto-punctuation / command words / de-filler), and a live pipeline + daily-usage stats on the PC page — so dictation turns straight into usable text. Built-in Enter / New-line / Backspace / Clear keys; Windows / macOS / Linux.</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"></a>
+  <img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square" alt="Python">
+  <img src="https://img.shields.io/badge/ASR-MiMo%20V2.5%20%7C%20Whisper-orange?style=flat-square" alt="ASR Engine">
+  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
+  <img src="https://github.com/DJKING792/TypMic/actions/workflows/ci.yml/badge.svg" alt="CI">
+</p>
+
+## Contents
+
+- [How it works](#how-it-works)
+- [Quick Start](#quick-start)
+  - [Download the project](#download-the-project)
+  - [Windows](#windows)
+  - [macOS](#macos)
+  - [Connect your phone](CONNECT_PHONE.en.md)
+
+## Compared with similar tools
+
+| Aspect | TypMic (this project) | Most similar tools |
+| --- | --- | --- |
+| Phone side | Record in the phone browser, scan to start, no app install | Require an app, or depend on a specific phone IME |
+| Recognition | Xiaomi MiMo cloud (Chinese / dialects / Chinese-English mix) + local faster-whisper offline mode | Usually a single engine / single option |
+| Control keys | Built-in Enter / New-line / Backspace / Clear buttons, standard key events, cross-platform | Often rely on Windows-only AutoHotkey scripts |
+| Cross-platform | Works on Windows / macOS / Linux, no platform lock-in | Often Windows-only |
+| Network & privacy | Pure LAN, data never leaves your network; offline mode keeps audio fully on-device | Often via public internet / third-party relay |
+
+## How it works
+
+```
+Phone browser                PC (runs this service)
+    |                              |
+    |---- record (HTTPS POST) --->|  /api/transcribe
+    |                              |      ↓ ffmpeg → 16 kHz mono wav
+    |                              |      ↓ MiMo-V2.5-ASR cloud API   (Cloud Mode)
+    |                              |      ↓ faster-whisper local model   (Offline Mode)
+    |<--- return transcript -------|      ↓ copy to clipboard + Ctrl+V into cursor
+```
+
+<p align="center">
+  <img src="assets/demo.gif" alt="TypMic demo: speak to your phone, text appears on your PC" width="640">
+</p>
+
+The text is only ever typed into the cursor of **the PC that runs this service**; the phone (or any other LAN device) acts purely as a "wireless microphone".
+
+## Requirements
+
+- Python 3.10+
+- [ffmpeg](https://ffmpeg.org) (must be on your `PATH`)
+- A PC + a phone on the same Wi-Fi
+- A Xiaomi MiMo API key **(Cloud Mode only)** — see [Getting a free MiMo API key](#getting-a-free-mimo-api-key). *Skip this if you use Offline Mode.*
+
+## Quick Start
+
+### Download the project
+
+1. Open the **Releases** page of the GitHub repo.
+2. Download the latest archive (e.g. `TypMic-xxx.zip`).
+3. Unzip it to any folder.
+4. Enter the unzipped **`TypMic`** folder — all the Windows / macOS steps below run from inside it.
+
+### Windows
+
+1. Get a Xiaomi MiMo API key at <https://platform.xiaomimimo.com> (register, then create an API key). *Only needed for Cloud Mode; skip it if you use Offline Mode.*
+2. **Allow the firewall first**: right-click `allow_firewall.bat` → "Run as administrator" (opens port 8443; one time only). If the phone later shows "connection refused / ERR_CONNECTION_REFUSED", this step was likely skipped.
+3. Double-click `start.bat`
+   - On first run it creates a virtualenv and installs dependencies automatically.
+   - It then **asks you to choose the recognition mode**: `1) Cloud (MiMo)` or `2) Offline (local faster-whisper)`. Offline mode skips the API-key prompt and installs the local ASR dependency automatically; your choice is remembered in `.env` for next time.
+   - It also asks about **AI polish** (default: auto-punctuation only) and **glossary** (default: on); just press Enter to accept the defaults — no config needed.
+   - If you pick Cloud Mode and no key is found, it **prompts you to enter one**, then writes it to `.env` automatically.
+4. The screen shows the "phone URL" (e.g. `https://192.168.x.x:8443`) and a QR code.
+5. Connect your phone by OS (see [Connect your phone](CONNECT_PHONE.en.md)).
+6. Put the PC cursor wherever you want text (Notepad / WeChat / browser…) and just speak into the phone.
+
+### macOS
+
+1. **Install ffmpeg** (for transcoding; pip can't install it): `brew install ffmpeg` (no Homebrew? get it at [brew.sh](https://brew.sh)).
+2. **Grant permissions** (System Settings → Privacy & Security): allow **Python** through the Firewall, and enable **Terminal** under Accessibility (else the phone can't connect or text won't type).
+3. **`cd` into the project and run it:**
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+export MIMO_API_KEY=your_key    # or put MIMO_API_KEY=your_key in a .env at the project root
+python voice_input_server.py
+```
+
+**Offline Mode** (no API key; audio never leaves your Mac): drop the `export MIMO_API_KEY` line above and end with these three instead — the recognition model is downloaded automatically on first run (default `small`):
+
+```bash
+pip install faster-whisper
+export TYPOMIC_ASR=local
+python voice_input_server.py
+```
+
+After startup the screen shows the "phone URL" and QR code — then connect your phone (see [Connect your phone](CONNECT_PHONE.en.md)).
+
+## Getting a free MiMo API key
+
+Cloud Mode needs a free Xiaomi MiMo API key. Get one in 3 steps:
+
+<details>
+<summary>📌 Click to expand: 3-step illustrated guide to a free MiMo API key</summary>
+
+**1. Register / log in** at <https://platform.xiaomimimo.com> (Xiaomi account)
+
+![Step 1 — register / log in](assets/mimo-key/mimo-step1-register.png)
+
+**2. Console → "API Keys" in the left sidebar**
+
+![Step 2 — API keys page](assets/mimo-key/mimo-step2-keys.png)
+
+**3. Create a key → copy it immediately** (shown only once) into `.env`: `MIMO_API_KEY=your_key`
+
+![Step 3 — create & copy the key](assets/mimo-key/mimo-step3-create.png)
+
+</details>
+
+> ⚠️ **Cost note (read before enabling AI polish)**
+> Speech **recognition (ASR)** via MiMo is billed by audio length: **¥0.5 / hour** (`mimo-v2.5-asr`) — extremely cheap but **not free**. **AI polish**, by contrast, calls the LLM **chat endpoint** and is billed **per token** (default `mimo-v2.5` series: input ¥1.00 / MTok, output ¥2.00 / MTok; cache-hit input just ¥0.02).
+> New accounts get **¥10 API trial credit (valid 40 days)** — enough for a long while:
+>
+> | Usage | How long ¥10 lasts |
+> | --- | --- |
+> | Recognition only (no polish) | ~**20 audio-hours** → ~**40 days** at 30 min/day |
+> | Recognition + AI polish (default "punctuate only") | **~35 days** at 30 min/day (~6,000 chars); months if used occasionally |
+> | Polish alone (reference) | ~1.8 tokens/Chinese char, ≈ ¥0.005 / 1k chars → ¥10 polishes **~1.85M chars (≈150–260 speaking-hours)** |
+>
+> In short: the trial-credit phase is effectively free. After it runs out you can top up by usage (real-name verification required). For **zero cost**, turn off AI polish and use Offline Mode — offline recognition runs on your PC and calls no MiMo API at all.
+
+## AI polish & glossary (optional)
+
+TypMic enables two post-processing steps by default: **auto-punctuation** + **correcting mis-heard terms** (e.g. product names) so the dictated text is ready to use. Both can be toggled in the `start.bat` launch menu; **on by default, no config needed**.
+
+> When AI polish is on, the recognized text is sent to your MiMo endpoint for cleanup. To keep everything fully local, just turn it off in the menu (audio always stays on your LAN).
+
+## FAQ
+
+<details>
+<summary>❓ How much latency is there?</summary>
+
+In **Cloud Mode** a typical utterance (a sentence or two) takes about **1–2 seconds** end-to-end — phone capture + LAN upload + MiMo ASR + paste. In **Offline Mode** it depends on model size and hardware: a `small` model on CPU is usually a few hundred ms to ~1–2 s per utterance; a GPU or `tiny`/`base` model is faster.
+
+</details>
+
+<details>
+<summary>❓ How long can a single clip be?</summary>
+
+There is no hard cap, but each "press-and-hold" is one clip. For best accuracy and lowest latency keep a clip to roughly **tens of seconds to a couple of minutes**; long dictation is best done as a series of short clips — the text streams into your cursor continuously.
+
+</details>
+
+<details>
+<summary>❓ Does it work without internet?</summary>
+
+**Cloud Mode** needs internet (to reach MiMo's ASR API), but your **audio is only ever sent across your own LAN to the PC** — it never passes through any third-party relay. If you need **zero internet**, enable **Offline Mode** (`TYPOMIC_ASR=local`): recognition runs entirely on your PC and works fully offline.
+
+</details>
+
+<details>
+<summary>❓ Is my audio private?</summary>
+
+In Cloud Mode, audio leaves your LAN only to reach Xiaomi's ASR endpoint for transcription, and TypMic stores nothing. In Offline Mode the audio never leaves the PC at all.
+
+</details>
+
+<details>
+<summary>❓ The phone can't connect / "connection refused"?</summary>
+
+On startup the server prints detailed diagnostics (IP / ffmpeg / cert / port / key status) — check there. The PC page `https://localhost:8443/desktop` also has a live connection-status view. Most "refused" cases are the firewall blocking port 8443 (see Quick Start).
+
+</details>
+
+## License
+
+[MIT](LICENSE) © TypMic contributors.
+
+## Contributing & Support
+
+- Want to help? See [CONTRIBUTING.md](CONTRIBUTING.md).
+- Found a vulnerability? Please follow [SECURITY.md](SECURITY.md).
+- Need help? Check [SUPPORT.md](SUPPORT.md).
