@@ -8,13 +8,14 @@
 
 <h1 align="center">TypMic</h1>
 
-<p align="center">TypMic turns your phone into a wireless microphone for your PC: speak in your phone's browser and the recognized text is typed into your PC's cursor in real time; it supports both Xiaomi MiMo cloud ASR (Chinese / dialects / Chinese-English mix) and local faster-whisper offline mode, stays on your pure LAN with no data leaving your network, and comes with built-in Enter / New-line / Backspace / Clear buttons.</p>
+<p align="center">TypMic turns your phone into a wireless microphone for your PC: scan a QR code in your phone's browser and start speaking — the recognized text lands at your PC's cursor, as if you were typing with your voice. No app install, no cable. Audio is sent only across your own LAN (never leaves your network). It's more than transcription: a complete dictation workflow with dual ASR engines (Xiaomi MiMo cloud + local Whisper), a glossary that fixes mis-heard terms, optional AI polish (auto-punctuation / command words / de-filler), and a live pipeline + daily-usage stats on the PC page — so dictation turns straight into usable text. Built-in Enter / New-line / Backspace / Clear keys; Windows / macOS / Linux.</p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"></a>
   <img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square" alt="Python">
   <img src="https://img.shields.io/badge/ASR-MiMo%20V2.5%20%7C%20Whisper-orange?style=flat-square" alt="ASR Engine">
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
+  <img src="https://github.com/DJKING792/TypMic/actions/workflows/ci.yml/badge.svg" alt="CI">
 </p>
 
 ## Contents
@@ -77,6 +78,7 @@ The text is only ever typed into the cursor of **the PC that runs this service**
 3. Double-click `start.bat`
    - On first run it creates a virtualenv and installs dependencies automatically.
    - It then **asks you to choose the recognition mode**: `1) Cloud (MiMo)` or `2) Offline (local faster-whisper)`. Offline mode skips the API-key prompt and installs the local ASR dependency automatically; your choice is remembered in `.env` for next time.
+   - It also asks about **AI polish** (default: auto-punctuation only) and **glossary** (default: on); just press Enter to accept the defaults — no config needed.
    - If you pick Cloud Mode and no key is found, it **prompts you to enter one**, then writes it to `.env` automatically.
 4. The screen shows the "phone URL" (e.g. `https://192.168.x.x:8443`) and a QR code.
 5. Connect your phone by OS (see [Connect your phone](CONNECT_PHONE.en.md)).
@@ -125,6 +127,12 @@ Cloud Mode needs a free Xiaomi MiMo API key. Get one in 3 steps:
 ![Step 3 — create & copy the key](assets/mimo-key/mimo-step3-create.png)
 
 </details>
+
+## AI polish & glossary (optional)
+
+TypMic enables two post-processing steps by default: **auto-punctuation** + **correcting mis-heard terms** (e.g. product names) so the dictated text is ready to use. Both can be toggled in the `start.bat` launch menu; **on by default, no config needed**.
+
+> When AI polish is on, the recognized text is sent to your MiMo endpoint for cleanup. To keep everything fully local, just turn it off in the menu (audio always stays on your LAN).
 
 ## FAQ
 
