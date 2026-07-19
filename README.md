@@ -15,6 +15,7 @@
   <img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square" alt="Python">
   <img src="https://img.shields.io/badge/ASR-MiMo%20V2.5%20%7C%20Whisper-orange?style=flat-square" alt="ASR Engine">
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
+  <img src="https://github.com/DJKING792/TypMic/actions/workflows/ci.yml/badge.svg" alt="CI">
 </p>
 
 ## 目录
@@ -144,7 +145,15 @@ TYPOMIC_POLISH=on
 
 > 提示：命令词的识别质量取决于你选用的润色模型；用默认的小米 MiMo 即可较好地理解「新段落」这类指令。
 >
+> **只加标点模式**：若希望识别结果逐字原样、只想要可读标点（例如录代码注释、逐字稿），把模式设为 `punctuate`，润色将严格保留原文每个字、仅补全标点：
+> ```bash
+> TYPOMIC_POLISH=on
+> TYPOMIC_POLISH_MODE=punctuate
+> ```
+>
 > 隐私提示：开启润色后，识别文本会发往你配置的对话接口（默认小米）做整理；音频本身仍只经局域网到本机。如要求完全不出网，请保持 `TYPOMIC_POLISH=off`（或离线模式）。
+
+> 电脑端扫码页（`/desktop`）会实时显示识别流水线（识别中 → 润色中 → 已粘贴）与今日字数 / 次数 / 平均识别·润色耗时，方便判断网络与 key 是否正常工作。
 
 ## 获取免费的小米 MiMo API Key
 
