@@ -129,16 +129,7 @@ Cloud Mode needs a free Xiaomi MiMo API key. Get one in 3 steps:
 </details>
 
 > ⚠️ **Cost note (read before enabling AI polish)**
-> Speech **recognition (ASR)** via MiMo is billed by audio length: **¥0.5 / hour** (`mimo-v2.5-asr`) — extremely cheap but **not free**. **AI polish**, by contrast, calls the LLM **chat endpoint** and is billed **per token** (default `mimo-v2.5` series: input ¥1.00 / MTok, output ¥2.00 / MTok; cache-hit input just ¥0.02).
-> New accounts get **¥10 API trial credit (valid 40 days)** — enough for a long while:
->
-> | Usage | How long ¥10 lasts |
-> | --- | --- |
-> | Recognition only (no polish) | ~**20 audio-hours** → ~**40 days** at 30 min/day |
-> | Recognition + AI polish (default "punctuate only") | **~35 days** at 30 min/day (~6,000 chars); months if used occasionally |
-> | Polish alone (reference) | ~1.8 tokens/Chinese char, ≈ ¥0.005 / 1k chars → ¥10 polishes **~1.85M chars (≈150–260 speaking-hours)** |
->
-> In short: the trial-credit phase is effectively free. After it runs out you can top up by usage (real-name verification required). For **zero cost**, turn off AI polish and use Offline Mode — offline recognition runs on your PC and calls no MiMo API at all.
+> Signing up at Xiaomi MiMo's platform (platform.xiaomimimo.com) gives you a **¥10 API trial credit (valid 40 days)**. At ~30 min of daily dictation it lasts **a month or more** during the trial phase. After it runs out you can top up by usage (real-name verification required). For **zero cost**, turn off AI polish and use Offline Mode — offline recognition runs on your PC and calls no MiMo API at all.
 
 ## AI polish & glossary (optional)
 
