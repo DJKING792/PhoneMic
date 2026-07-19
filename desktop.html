@@ -82,6 +82,8 @@
     <div class="k">ffmpeg</div><div class="v" id="s-ffmpeg">…</div>
     <div class="k">证书</div><div class="v" id="s-cert">…</div>
     <div class="k">识别模式</div><div class="v" id="s-model">…</div>
+    <div class="k">AI 润色</div><div class="v" id="s-polish">…</div>
+    <div class="k">术语表</div><div class="v" id="s-glossary">…</div>
     <div class="k">运行时长</div><div class="v" id="s-uptime">…</div>
   </div>
 
@@ -112,6 +114,11 @@
     document.getElementById("s-model").innerHTML = d.mimo_api_key_set
       ? tag("云端 MiMo ASR ✔", "ok")
       : tag("未配置 MIMO_API_KEY ✗", "err");
+    document.getElementById("s-polish").innerHTML = d.polish_enabled
+      ? (d.polish_ready ? tag("已开启 ✔", "ok") : tag("开启但未就绪 ⚠", "warn"))
+      : tag("关闭", "ok");
+    document.getElementById("s-glossary").textContent =
+      d.glossary_count > 0 ? (d.glossary_count + " 条规则已加载") : "无（可建 glossary.txt）";
     document.getElementById("key-banner").style.display = d.mimo_api_key_set ? "none" : "block";
     document.getElementById("s-uptime").textContent = fmtUptime(d.uptime_sec);
 
@@ -140,6 +147,8 @@
     document.getElementById("s-ffmpeg").textContent = "—";
     document.getElementById("s-cert").textContent = "—";
     document.getElementById("s-model").textContent = "—";
+    document.getElementById("s-polish").textContent = "—";
+    document.getElementById("s-glossary").textContent = "—";
     document.getElementById("s-uptime").textContent = "—";
     document.getElementById("key-banner").style.display = "none";
     document.getElementById("conn-wrap").innerHTML =
