@@ -112,10 +112,16 @@ POLISH_URL = os.environ.get(
 POLISH_MODEL = os.environ.get("TYPOMIC_POLISH_MODEL", "mimo-v2.5-flash").strip()
 # 润色 API key：默认复用 MIMO_API_KEY，也可单独配置。
 POLISH_API_KEY = os.environ.get("TYPOMIC_POLISH_API_KEY", MIMO_API_KEY).strip()
+# 润色模式：full（默认，去口语+顺句+分段+标点）或 punctuate（只补标点不改写）。
+POLISH_MODE = os.environ.get("TYPOMIC_POLISH_MODE", "full").strip().lower()
 
-polisher = Polisher(POLISH_URL, POLISH_API_KEY, POLISH_MODEL, timeout=30)
-# 术语表：gloom dict 形式；文件不存在则为空（不生效）。
-GLOSSARY_REPLACEMENTS, GLOSSARY_TERMS = load_glossary(GLOSSARY_FILE)
+polisher = Polisher(POLISH_URL, POLISH_API_KEY, POLISH_MODEL, timeout=30, mode=POLISH_MODE)
+# 术语表开关：默认 on（有 glossary.txt 即生效）；设 TYPOMIC_GLOSSARY=off 可关闭。
+GLOSSARY_ENABLED = os.environ.get("TYPOMIC_GLOSSARY", "on").strip().lower() == "on"
+# 术语表：dict 形式；关闭或文件不存在则为空（不生效）。
+GLOSSARY_REPLACEMENTS, GLOSSARY_TERMS = (
+    load_glossary(GLOSSARY_FILE) if GLOSSARY_ENABLED else ({}, set())
+)
 
 asr = None  # 懒加载，避免启动即占内存
 routes = web.RouteTableDef()
@@ -127,6 +133,49 @@ START_TIME = time.time()
 
 # 最近的连接记录（供 /api/status 展示，最多保留 50 条）
 CONNECTION_LOG: list = []
+
+# --------------------------------------------------------------------------- #
+# 透明流水线：SSE 事件流（识别中/润色中/已粘贴）+ 今日用量统计
+# --------------------------------------------------------------------------- #
+# 订阅 SSE 的客户端队列集合；每个桌面端页面一个队列。
+PIPELINE_CLIENTS: set = set()
+# 今日统计：次数 / 字数 / 识别耗时累计 / 润色耗时累计（跨午夜自动归零）
+STATS = {"date": "", "count": 0, "chars": 0, "asr_ms": 0.0, "polish_ms": 0.0}
+
+
+def broadcast(event: dict):
+    """向所有订阅 SSE 的桌面端推送一个流水线事件。非阻塞、单点失败不影响主链路。"""
+    dead = []
+    for q in PIPELINE_CLIENTS:
+        try:
+            q.put_nowait(event)
+        except Exception:
+            dead.append(q)
+    for q in dead:
+        PIPELINE_CLIENTS.discard(q)
+
+
+def record_stats(chars: int, asr_ms: float, polish_ms: float):
+    """累加一次成功识别的用量统计；跨日自动重置。"""
+    today = time.strftime("%Y-%m-%d")
+    if STATS["date"] != today:
+        STATS.update(date=today, count=0, chars=0, asr_ms=0.0, polish_ms=0.0)
+    STATS["count"] += 1
+    STATS["chars"] += chars
+    STATS["asr_ms"] += asr_ms
+    STATS["polish_ms"] += polish_ms
+
+
+def stats_snapshot():
+    """返回给前端的统计数据（平均延迟按次数折算）。"""
+    n = STATS["count"] or 1
+    return {
+        "date": STATS["date"],
+        "count": STATS["count"],
+        "chars": STATS["chars"],
+        "avg_asr_ms": round(STATS["asr_ms"] / n),
+        "avg_polish_ms": round(STATS["polish_ms"] / n),
+    }
 
 
 def record_connection(remote, method, path, status, ua):
@@ -492,10 +541,40 @@ async def api_status(request):
         "mimo_api_key_set": bool(MIMO_API_KEY),
         "polish_enabled": POLISH_ON,
         "polish_ready": polisher.ready(),
+        "polish_mode": POLISH_MODE,
         "glossary_count": len(GLOSSARY_REPLACEMENTS),
         "uptime_sec": int(time.time() - START_TIME),
+        "stats": stats_snapshot(),
         "connections": CONNECTION_LOG[-30:],
     })
+
+
+@routes.get("/api/stream")
+async def api_stream(request):
+    """SSE 事件流：实时推送识别流水线阶段（识别中/润色中/已粘贴）+ 今日统计。
+    供电脑端桌面页展示透明进度条。客户端断开即清理。"""
+    resp = web.StreamResponse(headers={
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
+    })
+    await resp.prepare(request)
+    q = asyncio.Queue()
+    PIPELINE_CLIENTS.add(q)
+    # 初始事件：当前统计快照，让页面一连接就有数据
+    try:
+        await resp.write(("data: " + json.dumps(
+            {"stage": "idle", "stats": stats_snapshot()}, ensure_ascii=False) + "\n\n").encode("utf-8"))
+        while True:
+            event = await q.get()
+            payload = "data: " + json.dumps(event, ensure_ascii=False) + "\n\n"
+            await resp.write(payload.encode("utf-8"))
+    except (ConnectionResetError, asyncio.CancelledError):
+        pass
+    finally:
+        PIPELINE_CLIENTS.discard(q)
+    return resp
 
 
 @routes.post("/api/transcribe")
@@ -524,25 +603,42 @@ async def transcribe_api(request):
     if asr is None:
         asr = LocalWhisperASR(WHISPER_MODEL) if ASR_MODE == "local" else MimoASR()
     # 调用识别（云端 MiMo 或本地 faster-whisper；异步，不阻塞事件循环）
+    broadcast({"stage": "asr", "ts": int(time.time() * 1000)})
     try:
+        t0 = time.time()
         text = await asr.transcribe(wav_path)
+        asr_ms = (time.time() - t0) * 1000
     except Exception as e:
         tag = "Local" if ASR_MODE == "local" else "MiMo"
         print(f"[{tag}] {e}", flush=True)
+        broadcast({"stage": "error", "msg": f"识别失败: {e}"})
         return web.json_response({"ok": False, "error": f"识别失败: {e}"})
 
     if not text.strip():
+        broadcast({"stage": "done", "text": "(未识别到语音)", "ms": round(asr_ms)})
         return web.json_response({"ok": True, "text": "(未识别到语音)"})
 
     # —— 文本后处理：术语表修正 + 可选 AI 润色（任一环节失败都降级为原文）——
-    text = apply_glossary(text, GLOSSARY_REPLACEMENTS)
+    if GLOSSARY_ENABLED:
+        text = apply_glossary(text, GLOSSARY_REPLACEMENTS)
+    polish_ms = 0.0
     if POLISH_ON:
+        broadcast({"stage": "polish", "ts": int(time.time() * 1000)})
+        t1 = time.time()
         text = await polisher.polish(text, GLOSSARY_TERMS)
-        text = apply_glossary(text, GLOSSARY_REPLACEMENTS)  # 润色后再保一道术语
+        polish_ms = (time.time() - t1) * 1000
+        if GLOSSARY_ENABLED:
+            text = apply_glossary(text, GLOSSARY_REPLACEMENTS)  # 润色后再保一道术语
+        broadcast({"stage": "polish_done", "ms": round(polish_ms)})
 
     # 粘贴放在 executor，并等它完成再返回，保证时序
     loop = asyncio.get_running_loop()
     await loop.run_in_executor(None, paste_text, text)
+
+    broadcast({"stage": "done", "text": text, "ms": round(asr_ms),
+               "polish_ms": round(polish_ms), "chars": len(text),
+               "stats": stats_snapshot()})
+    record_stats(len(text), asr_ms, polish_ms)
 
     # 清理临时文件
     try:
@@ -627,7 +723,8 @@ def print_startup_diagnostics(ip):
     # 文本后处理状态
     if POLISH_ON:
         if polisher.ready():
-            print(f"AI 润色        : 已开启 ✔（模型={POLISH_MODEL}）")
+            mode_cn = "只加标点" if POLISH_MODE == "punctuate" else "全量润色"
+            print(f"AI 润色        : 已开启 ✔（模式={mode_cn}，模型={POLISH_MODEL}）")
         else:
             YEL = "\033[93m"
             RESET = "\033[0m"
@@ -635,8 +732,11 @@ def print_startup_diagnostics(ip):
             print(YEL + "    请检查 TYPOMIC_POLISH_URL / TYPOMIC_POLISH_API_KEY / TYPOMIC_POLISH_MODEL" + RESET)
     else:
         print(f"AI 润色        : 关闭（设 TYPOMIC_POLISH=on 可开启；默认纯识别）")
-    print(f"术语表        : 已加载 {len(GLOSSARY_REPLACEMENTS)} 条规则"
-          + ("" if GLOSSARY_REPLACEMENTS else "（无 glossary.txt，可建一个做错词纠正）"))
+    if GLOSSARY_ENABLED:
+        print(f"术语表        : 已加载 {len(GLOSSARY_REPLACEMENTS)} 条规则"
+              + ("" if GLOSSARY_REPLACEMENTS else "（无 glossary.txt，可建一个做错词纠正）"))
+    else:
+        print("术语表        : 关闭（设 TYPOMIC_GLOSSARY=on 可开启，默认开启）")
     print("-" * 60)
     if not ffmpeg_ok:
         print("⚠ 警告：未检测到 ffmpeg，手机录音将无法转为文字。")
