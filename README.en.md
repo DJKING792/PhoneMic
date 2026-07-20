@@ -8,12 +8,12 @@
 
 <h1 align="center">TypMic</h1>
 
-<p align="center">Scan a QR code in your phone's browser to connect instantly — audio stays on your own LAN and never leaves your network. Dual ASR engines (Xiaomi MiMo cloud + local Whisper), a glossary that fixes mis-heard terms, and optional AI polish turn your dictation straight into usable text. Windows / macOS / Linux.</p>
+<p align="center">Scan a QR code in your phone's browser to connect instantly — audio stays on your own LAN and never leaves your network. Multiple ASR engines (Xiaomi MiMo cloud + local Whisper / SenseVoice), a glossary that fixes mis-heard terms, and optional AI polish turn your dictation straight into usable text. Windows / macOS / Linux.</p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"></a>
   <img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square" alt="Python">
-  <img src="https://img.shields.io/badge/ASR-MiMo%20V2.5%20%7C%20Whisper-orange?style=flat-square" alt="ASR Engine">
+  <img src="https://img.shields.io/badge/ASR-MiMo%20%7C%20Whisper%20%7C%20SenseVoice-orange?style=flat-square" alt="ASR Engine">
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
   <img src="https://github.com/DJKING792/TypMic/actions/workflows/ci.yml/badge.svg" alt="CI">
 </p>
@@ -32,7 +32,7 @@
 | Aspect | TypMic (this project) | Most similar tools |
 | --- | --- | --- |
 | Phone side | Record in the phone browser, scan to start, no app install | Require an app, or depend on a specific phone IME |
-| Recognition | Xiaomi MiMo cloud (Chinese / dialects / Chinese-English mix) + local faster-whisper offline mode | Usually a single engine / single option |
+| Recognition | Xiaomi MiMo cloud (Chinese / dialects / Chinese-English mix) + local faster-whisper / SenseVoice offline modes | Usually a single engine / single option |
 | Control keys | Built-in Enter / New-line / Backspace / Clear buttons, standard key events, cross-platform | Often rely on Windows-only AutoHotkey scripts |
 | Cross-platform | Works on Windows / macOS / Linux, no platform lock-in | Often Windows-only |
 | Network & privacy | Pure LAN, data never leaves your network; offline mode keeps audio fully on-device | Often via public internet / third-party relay |
@@ -45,7 +45,7 @@ Phone browser                PC (runs this service)
     |---- record (HTTPS POST) --->|  /api/transcribe
     |                              |      ↓ ffmpeg → 16 kHz mono wav
     |                              |      ↓ MiMo-V2.5-ASR cloud API   (Cloud Mode)
-    |                              |      ↓ faster-whisper local model   (Offline Mode)
+    |                              |      ↓ local Whisper / SenseVoice model   (Offline Mode)
     |<--- return transcript -------|      ↓ copy to clipboard + Ctrl+V into cursor
 ```
 
@@ -77,8 +77,8 @@ The text is only ever typed into the cursor of **the PC that runs this service**
 2. **Allow the firewall first**: right-click `allow_firewall.bat` → "Run as administrator" (opens port 8443; one time only). If the phone later shows "connection refused / ERR_CONNECTION_REFUSED", this step was likely skipped.
 3. Double-click `start.bat`
    - On first run it creates a virtualenv and installs dependencies automatically.
-   - It then **asks you to choose the recognition mode**: `1) Cloud (MiMo)` or `2) Offline (local faster-whisper)`. Offline mode skips the API-key prompt and installs the local ASR dependency automatically; your choice is remembered in `.env` for next time.
-   - It also asks about **AI polish** (default: auto-punctuation only) and **glossary** (default: on); just press Enter to accept the defaults — no config needed.
+   - It then **asks you to choose the recognition mode**: `1) Cloud (MiMo)` / `2) Offline (faster-whisper)` / `3) Offline (SenseVoice)`. Offline mode skips the API-key prompt and installs the local ASR dependency automatically; your choice is remembered in `.env` for next time.
+   - It also asks about **AI polish** (default: off) and **glossary** (default: on); just press Enter to accept the defaults — no config needed.
    - If you pick Cloud Mode and no key is found, it **prompts you to enter one**, then writes it to `.env` automatically.
 4. The screen shows the "phone URL" (e.g. `https://192.168.x.x:8443`) and a QR code.
 5. Connect your phone by OS (see [Connect your phone](CONNECT_PHONE.en.md)).
@@ -97,11 +97,13 @@ export MIMO_API_KEY=your_key    # or put MIMO_API_KEY=your_key in a .env at the 
 python voice_input_server.py
 ```
 
-**Offline Mode** (no API key; audio never leaves your Mac): drop the `export MIMO_API_KEY` line above and end with these three instead — the recognition model is downloaded automatically on first run (default `small`):
+**Offline Mode** (no API key; audio never leaves your Mac): drop the `export MIMO_API_KEY` line above and end with these instead — the recognition model is downloaded automatically on first run. `TYPOMIC_ASR` can be `whisper` (faster-whisper) or `sensevoice` (SenseVoice, with built-in punctuation / inverse text normalization):
 
 ```bash
-pip install faster-whisper
-export TYPOMIC_ASR=local
+# install one local engine:
+pip install faster-whisper            # whisper engine
+# pip install funasr modelscope       # sensevoice engine
+export TYPOMIC_ASR=whisper            # or sensevoice
 python voice_input_server.py
 ```
 
@@ -156,7 +158,7 @@ There is no hard cap, but each "press-and-hold" is one clip. For best accuracy a
 <details>
 <summary>❓ Does it work without internet?</summary>
 
-**Cloud Mode** needs internet (to reach MiMo's ASR API), but your **audio is only ever sent across your own LAN to the PC** — it never passes through any third-party relay. If you need **zero internet**, enable **Offline Mode** (`TYPOMIC_ASR=local`): recognition runs entirely on your PC and works fully offline.
+**Cloud Mode** needs internet (to reach MiMo's ASR API), but your **audio is only ever sent across your own LAN to the PC** — it never passes through any third-party relay. If you need **zero internet**, enable **Offline Mode** (`TYPOMIC_ASR=whisper` or `=sensevoice`): recognition runs entirely on your PC and works fully offline.
 
 </details>
 
