@@ -1,0 +1,4 @@
+# TypMic 本地 Whisper 引擎依赖（TYPOMIC_ASR=whisper）
+# 仅供本地识别使用；只跑云端 MiMo 无需本文件。
+# 安装：pip install -r requirements-whisper.txt
+faster-whisper>=1.0
