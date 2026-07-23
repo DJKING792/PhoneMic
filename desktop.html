@@ -207,6 +207,8 @@
     <div class="stat"><div class="n" id="st-chars">0</div><div class="l">今日字数</div></div>
     <div class="stat"><div class="n" id="st-asr">0</div><div class="l">平均识别(ms)</div></div>
     <div class="stat"><div class="n" id="st-polish">0</div><div class="l">平均润色(ms)</div></div>
+    <div class="stat"><div class="n" id="st-total-count">0</div><div class="l">累计次数</div></div>
+    <div class="stat"><div class="n" id="st-total-chars">0</div><div class="l">累计字数</div></div>
   </div>
 </div>
 
@@ -482,10 +484,12 @@
   }
   function renderStats(s) {
     if (!s) return;
-    document.getElementById("st-count").textContent = s.count;
-    document.getElementById("st-chars").textContent = s.chars;
-    document.getElementById("st-asr").textContent = s.avg_asr_ms;
-    document.getElementById("st-polish").textContent = s.avg_polish_ms;
+    document.getElementById("st-count").textContent = s.today_count;
+    document.getElementById("st-chars").textContent = s.today_chars;
+    document.getElementById("st-asr").textContent = s.today_asr_ms;
+    document.getElementById("st-polish").textContent = s.today_polish_ms;
+    document.getElementById("st-total-count").textContent = (s.total_count || 0).toLocaleString();
+    document.getElementById("st-total-chars").textContent = (s.total_chars || 0).toLocaleString();
   }
   var pipeTimer = null;
   function connectStream() {
