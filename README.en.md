@@ -100,10 +100,10 @@ python voice_input_server.py
 **Offline Mode** (no API key; audio never leaves your Mac): drop the `export MIMO_API_KEY` line above and end with these instead — the recognition model is downloaded automatically on first run. `TYPOMIC_ASR` can be `whisper` (faster-whisper) or `sensevoice` (SenseVoice, with built-in punctuation / inverse text normalization):
 
 ```bash
-# install one local engine:
-pip install faster-whisper            # whisper engine
-# pip install funasr modelscope       # sensevoice engine
-export TYPOMIC_ASR=whisper            # or sensevoice
+# install one local engine (only that engine; whisper does NOT pull torch):
+pip install -r requirements-whisper.txt      # whisper engine
+# pip install -r requirements-sensevoice.txt # sensevoice engine (ships CPU-only torch)
+export TYPOMIC_ASR=whisper                   # or sensevoice
 python voice_input_server.py
 ```
 
