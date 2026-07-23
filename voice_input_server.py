@@ -30,6 +30,7 @@ import sys
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+import usage_stats  # 真实用量统计（持久化累计到 usage_stats.json）
 
 try:
     import aiohttp
@@ -243,7 +244,7 @@ CONNECTION_LOG: list = []
 # 订阅 SSE 的客户端队列集合；每个桌面端页面一个队列。
 PIPELINE_CLIENTS: set = set()
 # 今日统计：次数 / 字数 / 识别耗时累计 / 润色耗时累计（跨午夜自动归零）
-STATS = {"date": "", "count": 0, "chars": 0, "asr_ms": 0.0, "polish_ms": 0.0}
+# 统计已迁移到 usage_stats 模块（持久化累计到 usage_stats.json）
 
 
 def broadcast(event: dict):
@@ -258,27 +259,14 @@ def broadcast(event: dict):
         PIPELINE_CLIENTS.discard(q)
 
 
-def record_stats(chars: int, asr_ms: float, polish_ms: float):
-    """累加一次成功识别的用量统计；跨日自动重置。"""
-    today = time.strftime("%Y-%m-%d")
-    if STATS["date"] != today:
-        STATS.update(date=today, count=0, chars=0, asr_ms=0.0, polish_ms=0.0)
-    STATS["count"] += 1
-    STATS["chars"] += chars
-    STATS["asr_ms"] += asr_ms
-    STATS["polish_ms"] += polish_ms
+def record_stats(chars: int, asr_ms: float = 0.0, polish_ms: float = 0.0):
+    """记录一次成功识别的真实用量（持久化累计到 usage_stats.json）。"""
+    usage_stats.record_usage(chars, asr_ms, polish_ms)
 
 
 def stats_snapshot():
-    """返回给前端的统计数据（平均延迟按次数折算）。"""
-    n = STATS["count"] or 1
-    return {
-        "date": STATS["date"],
-        "count": STATS["count"],
-        "chars": STATS["chars"],
-        "avg_asr_ms": round(STATS["asr_ms"] / n),
-        "avg_polish_ms": round(STATS["polish_ms"] / n),
-    }
+    """返回累计用量快照，给前端实时展示（含当日与累计）。"""
+    return usage_stats.snapshot()
 
 
 def record_connection(remote, method, path, status, ua):
@@ -770,10 +758,10 @@ async def transcribe_api(request):
     loop = asyncio.get_running_loop()
     await loop.run_in_executor(None, paste_text, text)
 
+    record_stats(len(text), asr_ms, polish_ms)
     broadcast({"stage": "done", "text": text, "ms": round(asr_ms),
                "polish_ms": round(polish_ms), "chars": len(text),
                "stats": stats_snapshot()})
-    record_stats(len(text), asr_ms, polish_ms)
 
     # 清理临时文件
     try:
