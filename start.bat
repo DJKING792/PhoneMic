@@ -90,8 +90,8 @@ if errorlevel 1 (
     exit /b 1
 )
 if "!ASRMODE!"=="whisper" (
-    echo 正在安装离线识别依赖（faster-whisper，首次运行会下载模型权重）...
-    "%VENV%\Scripts\python.exe" -m pip install -r "%BASE%requirements-offline.txt"
+    echo 正在安装本地 Whisper 依赖（faster-whisper，首次运行会下载模型权重）...
+    "%VENV%\Scripts\python.exe" -m pip install -r "%BASE%requirements-whisper.txt"
     if errorlevel 1 (
         echo 离线依赖安装失败。请检查网络后重试，或改用云端模式。
         pause
@@ -99,11 +99,11 @@ if "!ASRMODE!"=="whisper" (
     )
 )
 if "!ASRMODE!"=="sensevoice" (
-    echo 正在安装离线识别依赖（torch + funasr + modelscope，首次会下载模型权重）...
-    "%VENV%\Scripts\python.exe" -m pip install funasr modelscope
-    "%VENV%\Scripts\python.exe" -m pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+    echo 正在安装 SenseVoice 依赖（torch/funasr/modelscope，首次下载模型）...
+    "%VENV%\Scripts\python.exe" -m pip install -r "%BASE%requirements-sensevoice.txt"
     if errorlevel 1 (
-        echo 离线依赖安装失败（torch / funasr / modelscope）。请检查网络后重试，或改用云端模式。
+        echo 离线依赖安装失败（torch/funasr/modelscope）。
+        echo 请检查网络后重试，或改用云端模式。
         pause
         exit /b 1
     )
@@ -112,14 +112,12 @@ if "!ASRMODE!"=="sensevoice" (
 goto :aftersv
 
 :sv_predl
-set "MS_CACHE="
-set /p "MS_CACHE=模型下载到哪？(直接回车=默认 C://Users//Ax//.cache//modelscope)："
-if not "!MS_CACHE!"=="" (
-    if not exist "!MS_CACHE!" mkdir "!MS_CACHE!" 2>nul
-    set "MODELSCOPE_CACHE=!MS_CACHE!"
-    echo 模型将保存到：!MS_CACHE!
-)
-echo 正在预下载 SenseVoice 模型（约 1GB，首次较慢，请耐心等待进度条）...
+REM 模型下载到 TypMic/models/SenseVoiceSmall（按模型名独立文件夹）
+set "MS_CACHE=%BASE%models\SenseVoiceSmall"
+if not exist "!MS_CACHE!" mkdir "!MS_CACHE!" 2>nul
+set "MODELSCOPE_CACHE=!MS_CACHE!"
+echo 模型将保存到：!MS_CACHE!（首次下载约 1GB，请耐心等待进度条）
+echo 正在预下载 SenseVoice 模型...
     "%VENV%\Scripts\python.exe" -c "from funasr import AutoModel; AutoModel(model='iic/SenseVoiceSmall', trust_remote_code=True); print('SenseVoice model ready')"
 :aftersv
 REM --- MiMo API key（离线模式无需）---
@@ -172,11 +170,11 @@ if not "!ASRMODE!"=="cloud" (
         for /f "usebackq tokens=1,* delims==" %%A in (`findstr /b /i "TYPOMIC_POLISH=" "%KEYFILE%"`) do set "CURPOLISH=%%B"
         for /f "usebackq tokens=1,* delims==" %%A in (`findstr /b /i "TYPOMIC_POLISH_MODE=" "%KEYFILE%"`) do set "CURMODE=%%B"
     )
-    REM 本地引擎无需 key，AI 润色不可用（云端 MiMo / 本地 SenseVoice 已原生标点）
+    REM 本地引擎无需 key，AI 润色不可用（云端/本地模型已原生标点）
     if "!CURPOLISH!"=="on" if not defined CURMODE set "CURMODE=full"
     echo.
     echo ============================================================
-    echo  AI 润色（复用你的 MiMo key；mimo-v2.5-asr 已原生标点，无需额外补标点）
+    echo  AI 润色（复用 MiMo key；模型已原生标点，无需额外补标点）
     echo    1. 关闭         （纯识别，最快，自动标点符号）
     echo    2. 通用润色      （去口语+顺句+分段，默认风格）
     echo    3. 理顺逻辑      （适合说话散乱：补连接、理清层次）
