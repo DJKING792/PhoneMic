@@ -2,7 +2,8 @@
 
 可选功能：设置环境变量 TYPOMIC_ASR=whisper 或 =sensevoice 后启用。
 - 不需要任何云端 API key，识别完全在本机完成（音频不出本机 / 局域网之外的公网）。
-- 首次使用会自动下载对应模型权重（约几百 MB~1GB，仅一次）。
+- 首次使用会自动下载对应模型权重（约几百 MB~1GB，仅一次），
+  保存到 TypMic/models/ 下以模型名命名的独立文件夹（whisper-small / SenseVoiceSmall 等）。
 - 依赖均为【可选】安装，不污染核心依赖：
       pip install faster-whisper        # whisper 引擎
       pip install funasr modelscope      # sensevoice 引擎
@@ -11,6 +12,10 @@
 import os
 import re
 import threading
+from pathlib import Path
+
+# 模型权重统一下载到 TypMic/models/<模型名> 下，每个模型一个独立文件夹
+_MODELS_DIR = Path(__file__).resolve().parent / "models"
 
 _LOCK = threading.Lock()
 _MODEL = None
@@ -39,9 +44,14 @@ class LocalWhisperASR:
 
             device = (os.environ.get("WHISPER_DEVICE", "cpu") or "cpu").strip()
             compute_type = (os.environ.get("WHISPER_COMPUTE", "int8") or "int8").strip()
+            # 模型保存到 TypMic/models/whisper-<size>（每个模型独立文件夹）
+            download_root = _MODELS_DIR / f"whisper-{self.model_size}"
+            download_root.mkdir(parents=True, exist_ok=True)
+            print(f"[Whisper] 模型目录: {download_root}", flush=True)
             with _LOCK:
                 if _MODEL is None:
-                    _MODEL = WhisperModel(self.model_size, device=device, compute_type=compute_type)
+                    _MODEL = WhisperModel(self.model_size, device=device, compute_type=compute_type,
+                                          download_root=str(download_root))
         return _MODEL
 
     async def transcribe(self, wav_path):
@@ -81,6 +91,9 @@ class LocalSenseVoiceASR:
         # 批大小：默认 1（整段一次推理，不切分）。长录音设大（如 64）才会触发 VAD
         # 自动切分，避免长句被截断丢字、输出更完整。CPU 上越大越慢，按需调整。
         self.batch_size = int((os.environ.get("SENSEVOICE_BATCH", "1")).strip() or "1")
+        # 模型保存目录：TypMic/models/<模型名>，每个模型独立文件夹，互不干扰
+        short = self.model_name.split("/")[-1]
+        self.cache_dir = _MODELS_DIR / short
 
     def ready(self):
         try:
@@ -92,6 +105,10 @@ class LocalSenseVoiceASR:
     def _get_model(self):
         global _SV_MODEL
         if _SV_MODEL is None:
+            # 权重下载到 TypMic/models/<模型名>（每个模型独立文件夹，互不干扰）
+            self.cache_dir.mkdir(parents=True, exist_ok=True)
+            os.environ.setdefault("MODELSCOPE_CACHE", str(self.cache_dir))
+            print(f"[SenseVoice] 模型目录: {self.cache_dir}", flush=True)
             from funasr import AutoModel
             with _SV_LOCK:
                 if _SV_MODEL is None:
