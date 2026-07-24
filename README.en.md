@@ -27,6 +27,11 @@
   - [macOS](#macos)
   - [Connect your phone](CONNECT_PHONE.en.md)
 
+## Real usage statistics
+
+![Usage count](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/DJKING792/GIST_ID/raw/stats_count.json)
+![Characters typed](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/DJKING792/GIST_ID/raw/stats_chars.json)
+
 ## Compared with similar tools
 
 | Aspect | TypMic (this project) | Most similar tools |
@@ -67,7 +72,7 @@ The text is only ever typed into the cursor of **the PC that runs this service**
 ### Download the project
 
 1. Open the **Releases** page of the GitHub repo.
-2. Download the latest archive (e.g. `TypMic-xxx.zip`).
+2. Download the latest archive.
 3. Unzip it to any folder.
 4. Enter the unzipped **`TypMic`** folder — all the Windows / macOS steps below run from inside it.
 
@@ -105,6 +110,8 @@ pip install -r requirements-whisper.txt      # whisper engine
 # pip install -r requirements-sensevoice.txt # sensevoice engine (ships CPU-only torch)
 export TYPOMIC_ASR=whisper                   # or sensevoice
 python voice_input_server.py
+
+> **Improve Whisper accuracy** (already tuned for Chinese by default, no extra step needed): `WHISPER_LANG` forces the language (default `zh`; set `auto` to auto-detect); `WHISPER_VAD` silence filtering (default `on`); `WHISPER_PROMPT` custom prompt. For higher accuracy set `WHISPER_MODEL=medium` (larger and slower).
 ```
 
 After startup the screen shows the "phone URL" and QR code — then connect your phone (see [Connect your phone](CONNECT_PHONE.en.md)).
