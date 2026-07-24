@@ -1,13 +1,5 @@
 #!/usr/bin/env python3
-"""TypMic 真实用量统计 —— 持久化累计，纯标准库，不依赖任何第三方包。
-
-数据存本地 ``usage_stats.json``（本地数据，**绝不进发布包、绝不推 GitHub**）。
-记录的都是作者自己真实使用的反馈：
-  - total_count : 累计成功识别次数
-  - total_chars : 累计输入字符数
-  - daily       : 按日明细 {YYYY-MM-DD: {count, chars}}
-这些信息用于向访客展示「作者自己天天在用」，增强项目可信度。
-"""
+"""TypMic 真实用量统计 —— 持久化累计，纯标准库，不依赖任何第三方包。"""
 from __future__ import annotations
 
 import json
