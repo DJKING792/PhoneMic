@@ -18,8 +18,6 @@
   <img src="https://img.shields.io/badge/ASR-MiMo%20%7C%20Whisper%20%7C%20SenseVoice-orange?style=flat-square" alt="ASR Engine">
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square" alt="Platform">
   <img src="https://github.com/DJKING792/TypMic/actions/workflows/ci.yml/badge.svg" alt="CI">
-  <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/DJKING792/GIST_ID/raw/stats_count.json" alt="使用次数">
-  <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/DJKING792/GIST_ID/raw/stats_chars.json" alt="已输入字数">
 </p>
 
 ## 目录
@@ -31,14 +29,10 @@
   - [macOS](#macos)
   - [手机连接](CONNECT_PHONE.md)
 
-## 作者真实用量
-
-本项目作者自己每天都在用，下面两个 badge 是**真实累计**数据（不是刷量），通过 shields.io 实时读取一个独立 Gist：
+## 作者真实用量统计
 
 ![使用次数](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/DJKING792/GIST_ID/raw/stats_count.json)
 ![已输入字数](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/DJKING792/GIST_ID/raw/stats_chars.json)
-
-数据来自本地 `usage_stats.json`，由 `update_usage_badge.py` 每天定时推到 Gist（详见脚本内注释）。把上面 URL 里的 `GIST_ID` 换成你自己的即可。
 
 ## 与同类工具对比
 
@@ -80,7 +74,7 @@
 ### 项目下载
 
 1. 打开 GitHub 仓库的 **Releases** 页面。
-2. 下载最新版本的压缩包（如 `Source code (zip)`）。
+2. 下载最新版本的压缩包。
 3. 把压缩包解压到任意目录。
 4. 进入解压后的 **`TypMic`** 文件夹。
 
@@ -113,6 +107,8 @@ pip install -r requirements-whisper.txt      # whisper 引擎
 # pip install -r requirements-sensevoice.txt # sensevoice 引擎（含纯 CPU 版 torch）
 export TYPOMIC_ASR=whisper                   # 或 sensevoice
 python voice_input_server.py
+
+> **提升 Whisper 识别准确率**（默认已针对中文调优，无需额外操作）：`WHISPER_LANG` 强制语种（默认 `zh`，设 `auto` 恢复自动检测）；`WHISPER_VAD` 静音过滤（默认 `on`）；`WHISPER_PROMPT` 自定义提示词。想要更准可设 `WHISPER_MODEL=medium`（更大更慢）。
 ```
 
 > 模型权重会自动下载到项目内的 `models/` 目录（如 `models/whisper-small`、`models/SenseVoiceSmall`），每个模型一个独立文件夹，不会污染系统目录；`models/`、`usage_stats.json` 等均不纳入发布包与 Git。
