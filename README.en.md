@@ -29,8 +29,8 @@
 
 ## Real usage statistics
 
-![Usage count](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/DJKING792/GIST_ID/raw/stats_count.json)
-![Characters typed](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/DJKING792/GIST_ID/raw/stats_chars.json)
+![Usage count](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/DJKING792/bc3a274ec6d49e8b16775c4a3d870ab6/raw/stats_count.json)
+![Characters typed](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/DJKING792/bc3a274ec6d49e8b16775c4a3d870ab6/raw/stats_chars.json)
 
 ## Compared with similar tools
 
