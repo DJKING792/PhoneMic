@@ -25,7 +25,14 @@ _SV_MODEL = None
 
 
 class LocalWhisperASR:
-    """基于 faster-whisper 的离线识别（语音不出本机）。"""
+    """基于 faster-whisper 的离线识别（语音不出本机）。
+
+    默认针对中文场景做了调优，可经环境变量覆盖：
+        WHISPER_LANG    识别语种（默认 zh；填 auto 恢复自动检测，en 等其它语种）
+        WHISPER_PROMPT  自定义 initial_prompt（默认一句中文引导，提示模型输出简体中文+标点）
+        WHISPER_VAD     静音/噪声过滤（默认 on；off 关闭，关闭后长静音段可能干扰识别）
+    其余已有：WHISPER_MODEL(默认 small) / WHISPER_DEVICE / WHISPER_COMPUTE。
+    """
 
     def __init__(self, model_size=None):
         self.model_size = (model_size or os.environ.get("WHISPER_MODEL", "small")).strip() or "small"
@@ -59,7 +66,7 @@ class LocalWhisperASR:
             raise RuntimeError(
                 "离线模式需要 faster-whisper。请先安装：\n"
                 "  pip install faster-whisper\n"
-                "并确认已设置 TYPOMIC_ASR=local。"
+                "并确认已设置 TYPOMIC_ASR=whisper（本地识别需要该引擎）。"
             )
         import asyncio
 
@@ -68,7 +75,40 @@ class LocalWhisperASR:
 
     def _sync_transcribe(self, wav_path):
         model = self._get_model()
-        segments, _ = model.transcribe(wav_path, language=None, beam_size=5)
+        # —— 中文场景调优（默认，可经环境变量覆盖）——
+        # 1) 强制语种 zh：small 模型在 auto 下极易把中文误判成其它语种导致满屏错字，
+        #    强制 zh 是中文准确率提升最大的一步（WHISPER_LANG=auto 可恢复自动检测）。
+        lang = (os.environ.get("WHISPER_LANG", "zh") or "zh").strip()
+        if lang.lower() == "auto":
+            lang = None
+        # 2) initial_prompt：引导模型输出简体中文 + 正确标点（WHISPER_PROMPT 可自定义）。
+        default_prompt = "以下是中文普通话的语音转写，请输出简体中文并正确使用标点符号。"
+        prompt = (os.environ.get("WHISPER_PROMPT", "") or "").strip() or default_prompt
+        # 3) VAD 静音过滤：切掉首尾/段间静音与噪声，避免空段与错字（WHISPER_VAD=off 关闭）。
+        use_vad = (os.environ.get("WHISPER_VAD", "on") or "on").strip().lower() != "off"
+        vad_parameters = None
+        if use_vad:
+            from faster_whisper import VadOptions
+            vad_parameters = VadOptions(
+                threshold=0.5,                # 语音/静音判定阈值（Silero 默认）
+                min_silence_duration_ms=1000, # 段间静音超过此值才切段，避免短停顿过度切分
+                speech_pad_ms=200,            # 段首尾补 200ms，防止吞掉词首/词尾
+                max_speech_duration_s=30,     # 超长段强制切分，避免单段过长丢字
+            )
+        # 4) 跨句上下文：condition_on_previous_text 让相邻句共享语境，专有名词更连贯。
+        # 5) 温度回退：首遍差时自动升温(0→0.5→1.0)重解，降低硬句的错字率。
+        print(f"[Whisper] lang={lang} vad={use_vad} prompt={'自定义' if os.environ.get('WHISPER_PROMPT') else '默认'}",
+              flush=True)
+        segments, _ = model.transcribe(
+            wav_path,
+            language=lang,
+            beam_size=5,
+            vad_filter=use_vad,
+            vad_parameters=vad_parameters,
+            initial_prompt=prompt,
+            condition_on_previous_text=True,
+            temperature=[0.0, 0.5, 1.0],
+        )
         return "".join(seg.text for seg in segments).strip()
 
 
